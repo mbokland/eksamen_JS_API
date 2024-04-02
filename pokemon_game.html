@@ -15,11 +15,11 @@
 
       async function fetchPokemon() {
         const pokemonRequest = await fetch(
-          "https://pokeapi.co/api/v2/pokemon/"
+          "https://pokeapi.co/api/v2/pokemon/?limit=50" //?limit=50" viser 50 pokemons
         ); //Fetcher APIet's pokemon (etter anvist i dokumentasjonen)
 
         const result = await pokemonRequest.json(); //resultat fra API gjøres om til json-format
-
+        console.log(showAllPokemon);
         result.results.forEach(async (pokemon) => {
           //ForEach går gjennom results-arrayet //Tar imot Pokemonobjekt til parameter
           const pokemonRequest = await fetch(pokemon.url); //Fetcher alle pokemons
