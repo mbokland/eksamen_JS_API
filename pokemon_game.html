@@ -15,7 +15,7 @@
 
       async function fetchPokemon() {
         const pokemonRequest = await fetch(
-          "https://pokeapi.co/api/v2/pokemon/?limit=50" //?limit=50" viser 50 pokemons
+          "https://pokeapi.co/api/v2/pokemon/?limit=50" //?limit=50" viser 50 pokemons (standard er 20, som nevnt i dokumentasjonen)
         ); //Fetcher APIet's pokemon (etter anvist i dokumentasjonen)
 
         const result = await pokemonRequest.json(); //resultat fra API gjøres om til json-format
@@ -25,10 +25,18 @@
           const pokemonRequest = await fetch(pokemon.url); //Fetcher alle pokemons
           const pokemonData = await pokemonRequest.json(); //Gjør om til json-format, await=venter til data er lastet opp
 
+          const pokemonNumber = pokemonData.id; //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
+
+          const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`; //Link til pokeAPIets github med bilderessurser
+
           const pokemonElement = document.createElement("div"); //lager ny div med informasjonen fra APIet
           pokemonElement.innerHTML = `
         <p>Navn: ${pokemonData.name}</p> 
         <p>Type: ${pokemonData.types[0].type.name}</p>`; //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
+
+          const imgElement = document.createElement("img"); //legge til nytt element(bilde)
+          imgElement.src = pokemonImageUrl;
+          pokemonElement.appendChild(imgElement);
 
           showAllPokemon.appendChild(pokemonElement); //appendChild for å lage underelement av ShowAllPokemon, og funksjonen gjør at info vises på nettsiden.
         });
