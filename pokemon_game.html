@@ -18,7 +18,7 @@
 
     <script>
       //Her hentes div ifra HTML
-      const showAllPokemon = document.querySelector("#show-all-pokemon");
+      let showAllPokemon = document.querySelector("#show-all-pokemon");
 
       //?limit=50" viser 50 pokemons (standard er 20, som nevnt i dokumentasjonen)
       //Fetcher APIet's pokemon (etter anvist i dokumentasjonen)
@@ -29,8 +29,6 @@
 
         //resultat fra API gjøres om til json-format
         let result = await pokemonRequest.json();
-
-        console.log(showAllPokemon);
 
         //ForEach går gjennom results-arrayet //Tar imot Pokemonobjekt til parameter
         //Fetcher alle pokemons
