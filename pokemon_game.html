@@ -27,6 +27,14 @@
           "https://pokeapi.co/api/v2/pokemon/?limit=50"
         );
 
+        async function fethAndShowPokemon() {
+          try {
+            showAllPokemon = await fetchPokemon();
+          } catch {
+            console.error("Oisann! Klarte ikke å laste inn Pokémon!");
+          }
+        }
+
         //resultat fra API gjøres om til json-format
         let result = await pokemonRequest.json();
 
