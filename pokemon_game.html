@@ -7,15 +7,8 @@
   </head>
   <body>
     <h1>Pokemonoversikt</h1>
-    <div id="show-all-pokemon"></div>
-
-    <!--Knapper som synes i hver div-->
-    <div class="buttons-container">
-      <input class="pokemon-btn" type="button" value="Lagre" id="save-btn" />
-      <input class="pokemon-btn" type="button" value="Slett" id="delete-btn" />
-      <input class="pokemon-btn" type="button" value="Endre" id="edit-btn" />
-    </div>
     <!-- div som pokemon skal legges inn i -->
+    <div id="show-all-pokemon"></div>
 
     <script>
       //Her hentes div ifra HTML
@@ -59,36 +52,21 @@
           imgCard.src = pokemonImageUrl;
           pokemonCard.appendChild(imgCard);
 
+          //legge til knapper
+          const saveBtn = document.createElement("button");
+          const deleteBtn = document.createElement("button");
+          const editBtn = document.createElement("button");
+
+          pokemonCard.appendChild(saveBtn);
+          pokemonCard.appendChild(deleteBtn);
+          pokemonCard.appendChild(editBtn);
+
           //appendChild for å lage underelement av ShowAllPokemon, og funksjonen gjør at info vises på nettsiden.
           showAllDiv.appendChild(pokemonCard);
         });
       }
-      /*
-      function showAllPokemon() {
-        result.forEach((pokemonData, index) => {
-          const pokemonContainer = document.createElement("div");
-
-          //slette
-          const deleteBtn = document.createElement("button");
-          deleteBtn.innerHTML = "Slett Pokémon";
-          deletBtn.style.backroundColor = "blue";
-
-          pokemonCard.innerHTML = `<img src="${imgCard} style="width: 75px" />, <h2>${pokemonData.name}</h2>, <h3>${pokemonData.type}</h3>`;
-          pokemonCard.append(deleteBtn);
-          pokemonContainer.append(pokemonCard);
-        });
-      }
-*/
-      /* Usikker på denne koden??
-              function createButton(text, clickHandler) {
-                const button = document.createElement("button");
-                button.innerHTML = text;
-                button.addEventListener("click", clickHandler);
-                return button;
-              }*/
 
       //kalle på funksjonen
-
       fetchPokemon();
     </script>
   </body>
