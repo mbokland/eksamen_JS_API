@@ -8,6 +8,7 @@
   <body>
     <h1>Pokemonoversikt</h1>
     <div id="show-all-pokemon"></div>
+
     <!--Knapper som synes i hver div-->
     <div class="buttons-container">
       <input class="pokemon-btn" type="button" value="Lagre" id="save-btn" />
@@ -18,7 +19,7 @@
 
     <script>
       //Her hentes div ifra HTML
-      let showAllPokemon = document.querySelector("#show-all-pokemon");
+      const showAllDiv = document.querySelector("#show-all-pokemon");
 
       //?limit=50" viser 50 pokemons (standard er 20, som nevnt i dokumentasjonen)
       //Fetcher APIet's pokemon (etter anvist i dokumentasjonen)
@@ -43,24 +44,51 @@
           //Link til pokeAPIets github med bilderessurser
           const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
 
+          //const pokemonCard = createElement("div");
+          // pokemonCard.innerHTML = `<img src="${imgCard} style="width: 75px" /> <h2>${pokemonData.name}</h2> <h3>${pokemonData.type}</h3>`;
+
           //lager ny div med informasjonen fra APIet
           //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
-          const pokemonElement = document.createElement("div");
-          pokemonElement.innerHTML = `
-        <p>Navn: ${pokemonData.name}</p> 
-        <p>Type: ${pokemonData.types[0].type.name}</p>`;
+          const pokemonCard = document.createElement("div");
+          pokemonCard.innerHTML = `
+              <p>Navn: ${pokemonData.name}</p>
+              <p>Type: ${pokemonData.types[0].type.name}</p>`;
 
           //legge til nytt element(bilde)
-          const imgElement = document.createElement("img");
-          imgElement.src = pokemonImageUrl;
-          pokemonElement.appendChild(imgElement);
+          const imgCard = document.createElement("img");
+          imgCard.src = pokemonImageUrl;
+          pokemonCard.appendChild(imgCard);
 
           //appendChild for å lage underelement av ShowAllPokemon, og funksjonen gjør at info vises på nettsiden.
-          showAllPokemon.appendChild(pokemonElement);
+          showAllDiv.appendChild(pokemonCard);
         });
       }
+      /*
+      function showAllPokemon() {
+        result.forEach((pokemonData, index) => {
+          const pokemonContainer = document.createElement("div");
+
+          //slette
+          const deleteBtn = document.createElement("button");
+          deleteBtn.innerHTML = "Slett Pokémon";
+          deletBtn.style.backroundColor = "blue";
+
+          pokemonCard.innerHTML = `<img src="${imgCard} style="width: 75px" />, <h2>${pokemonData.name}</h2>, <h3>${pokemonData.type}</h3>`;
+          pokemonCard.append(deleteBtn);
+          pokemonContainer.append(pokemonCard);
+        });
+      }
+*/
+      /* Usikker på denne koden??
+              function createButton(text, clickHandler) {
+                const button = document.createElement("button");
+                button.innerHTML = text;
+                button.addEventListener("click", clickHandler);
+                return button;
+              }*/
 
       //kalle på funksjonen
+
       fetchPokemon();
     </script>
   </body>
