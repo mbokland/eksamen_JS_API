@@ -65,6 +65,11 @@
           saveBtn.textContent = "Lagre";
           saveBtn.style.width = "50px";
 
+          saveBtn.addEventListener("click", () => {
+            const pokemonName = pokemonData.name;
+            localStorage.setItem("name", pokemonName);
+          });
+
           const deleteBtn = document.createElement("button");
           deleteBtn.textContent = "Slett";
           deleteBtn.style.width = "50px";
