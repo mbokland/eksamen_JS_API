@@ -73,7 +73,7 @@
             let savedPokemon =
               JSON.parse(localStorage.getItem("savedPokemon")) || [];
             savedPokemon.push(pokemonName);
-            localStorage.setItem("name", pokemonData.name);
+            localStorage.setItem(pokemonName, JSON.stringify(pokemonData.name));
           });
 
           const deleteBtn = document.createElement("button");
@@ -101,7 +101,7 @@
 
           if (nextPokemon <= 5) {
             savedPokemon.push(selectedPokemon);
-            localStorage.setItem("name", JSON.stringify(`savedPokemon`));
+            localStorage.setItem("savedPokemon", JSON.stringify(savedPokemon));
           } else if (nextPokemon >= 6) {
             alert(
               "Du kan ikke lagre flere Pokémons! Vennligst slett en Pokémon for å fortsette"
