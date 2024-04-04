@@ -23,15 +23,7 @@
         const pokemonRequest = await fetch(
           "https://pokeapi.co/api/v2/pokemon/?limit=50"
         );
-        async function savedPokemonSetUp(selectedPokemon) {
-          try {
-            savedPokemon =
-              JSON.parse(localStorage.getItem("savedPokemon")) || [];
-            nextPokemon = savedPokemon.length + 1;
-          } catch {
-            console.error("Klarte ikke å lagre pokemons");
-          }
-        }
+
         const nextPokemon = async function fethAndShowPokemon() {
           try {
             showAllDiv = await fetchPokemon();
@@ -81,7 +73,7 @@
             let savedPokemon =
               JSON.parse(localStorage.getItem("savedPokemon")) || [];
             savedPokemon.push(pokemonName);
-            localStorage.setItem("savedPokemon", JSON.stringify(savedPokemon));
+            localStorage.setItem("name", pokemonData.name);
           });
 
           const deleteBtn = document.createElement("button");
@@ -101,8 +93,29 @@
         });
       }
 
+      async function savedPokemonSetUp() {
+        try {
+          savedPokemon = JSON.parse(localStorage.getItem("savedPokemon")) || [];
+
+          nextPokemon = savedPokemon.length + 1;
+
+          if (nextPokemon <= 5) {
+            savedPokemon.push(selectedPokemon);
+            localStorage.setItem("name", JSON.stringify(`savedPokemon`));
+          } else if (nextPokemon >= 6) {
+            alert(
+              "Du kan ikke lagre flere Pokémons! Vennligst slett en Pokémon for å fortsette"
+            );
+          }
+        } catch {
+          console.error("Klarte ikke å lagre pokemons");
+        }
+      }
+
       //kalle på funksjonen
       fetchPokemon();
+      savedPokemonSetUp();
+      console.log(savedPokemonSetUp);
     </script>
   </body>
 </html>
