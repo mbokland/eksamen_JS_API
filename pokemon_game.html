@@ -14,20 +14,31 @@
       //Her hentes div ifra HTML
       const showAllDiv = document.querySelector("#show-all-pokemon");
 
+      let savedPokemon = [];
+      const storageKey = "savedPokemon";
+
       //?limit=50" viser 50 pokemons (standard er 20, som nevnt i dokumentasjonen)
       //Fetcher APIet's pokemon (etter anvist i dokumentasjonen)
       async function fetchPokemon() {
         const pokemonRequest = await fetch(
           "https://pokeapi.co/api/v2/pokemon/?limit=50"
         );
-
-        async function fethAndShowPokemon() {
+        async function savedPokemonSetUp(selectedPokemon) {
           try {
-            showAllPokemon = await fetchPokemon();
+            savedPokemon =
+              JSON.parse(localStorage.getItem("savedPokemon")) || [];
+            nextPokemon = savedPokemon.length + 1;
+          } catch {
+            console.error("Klarte ikke å lagre pokemons");
+          }
+        }
+        const nextPokemon = async function fethAndShowPokemon() {
+          try {
+            showAllDiv = await fetchPokemon();
           } catch {
             console.error("Oisann! Klarte ikke å laste inn Pokémon!");
           }
-        }
+        };
 
         //resultat fra API gjøres om til json-format
         let result = await pokemonRequest.json();
@@ -67,7 +78,10 @@
 
           saveBtn.addEventListener("click", () => {
             const pokemonName = pokemonData.name;
-            localStorage.setItem("name", pokemonName);
+            let savedPokemon =
+              JSON.parse(localStorage.getItem("savedPokemon")) || [];
+            savedPokemon.push(pokemonName);
+            localStorage.setItem("savedPokemon", JSON.stringify(savedPokemon));
           });
 
           const deleteBtn = document.createElement("button");
