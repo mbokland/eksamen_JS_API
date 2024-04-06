@@ -13,7 +13,7 @@
 
     <script>
       //Her hentes div ifra HTML
-      const showAllDiv = document.querySelector("#show-all-pokemon");
+      const showAllPokemon = document.querySelector("#show-all-pokemon");
 
       //?limit=50" viser 50 pokemons (standard er 20, som nevnt i dokumentasjonen)
       //Fetcher APIet's pokemon (etter anvist i dokumentasjonen)
@@ -53,8 +53,8 @@
           //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
           const pokemonCard = document.createElement("div");
           pokemonCard.innerHTML = `
-              <p>Navn: ${pokemonData.name}</p>
-              <p>Type: ${pokemonData.types[0].type.name}</p>`;
+                <p>Navn: ${pokemonData.name}</p>
+                <p>Type: ${pokemonData.types[0].type.name}</p>`;
 
           //legge til nytt element(bilde)
           const imgCard = document.createElement("img");
@@ -79,7 +79,7 @@
           pokemonCard.appendChild(editBtn);
 
           //appendChild for å lage underelement av ShowAllPokemon, og funksjonen gjør at info vises på nettsiden.
-          showAllDiv.appendChild(pokemonCard);
+          showAllPokemon.appendChild(pokemonCard);
         });
       }
 
@@ -95,16 +95,44 @@
           );
           const pokemonTypeData = await fetchTypesRequest.json();
           allPokemonTypes = pokemonTypeData.results;
-          const pokemonTypes = pokemonTypeData.result.slice(0, 18);
-          createFilterBtn();
+          const pokemonTypes = pokemonTypeData.results.slice(0, 18);
+          createFilterBtn(pokemonTypes);
         } catch (error) {
           console.error("Feil ved lasting av type Pokemon", error);
         }
       }
 
-      function createFilterBtn(types) {
+      function createFilterBtn(pokemonTypes) {
         const filterBtnContainer = document.getElementById("filter-buttons");
+        pokemonTypes.forEach((type) => {
+          const pokemonTypeBtn = document.createElement("button");
+          pokemonTypeBtn.textContent = type.name;
+          pokemonTypeBtn.addEventListener("click", () => {
+            fetchPokemonTypes(type.name);
+          });
+          filterBtnContainer.appendChild(pokemonTypeBtn);
+        });
       }
+
+      async function fetchPokemonByType(type) {
+        try {
+          const response = await fetch(
+            `https://pokeapi.co/api/v2/type/${type}`
+          );
+          const pokemonTypeData = await response.json();
+          const pokemons = pokemonTypeData.pokemon;
+
+          showAllPokemon.innerHTML = "";
+        } catch (error) {
+          console.error("Klarte ikke å laste inn pokemon av type ${}", error);
+        }
+      }
+
+      function displayFilteredPokemons(pokemon) {
+        const pokemonContainer = document.getElementById("pokemon-container");
+        pokemonContainer.innerHTML = "";
+      }
+      fetchPokemonTypes();
     </script>
   </body>
 </html>
