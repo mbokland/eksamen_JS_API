@@ -104,6 +104,9 @@
 
       function createFilterBtn(pokemonTypes) {
         const filterBtnContainer = document.getElementById("filter-buttons");
+
+        filterBtnContainer.innerHTML = ""; //Tømmer btn-container, så ikke knappene dobler seg
+
         pokemonTypes.forEach((type) => {
           const pokemonTypeBtn = document.createElement("button");
           pokemonTypeBtn.textContent = type.name;
