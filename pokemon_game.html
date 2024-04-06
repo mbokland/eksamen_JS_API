@@ -12,110 +12,120 @@
 
     <script>
       //Her hentes div ifra HTML
-      const showAllDiv = document.querySelector("#show-all-pokemon");
+      const showAllPokemon = document.querySelector("#show-all-pokemon");
 
+      //Array for å lagre valgt pokemon
       let savedPokemon = [];
+
+      //Usikker på om det er behov for denne
       const storageKey = "savedPokemon";
 
       //?limit=50" viser 50 pokemons (standard er 20, som nevnt i dokumentasjonen)
       //Fetcher APIet's pokemon (etter anvist i dokumentasjonen)
       async function fetchPokemon() {
-        const pokemonRequest = await fetch(
-          "https://pokeapi.co/api/v2/pokemon/?limit=50"
-        );
-
-        const nextPokemon = async function fethAndShowPokemon() {
-          try {
-            showAllDiv = await fetchPokemon();
-          } catch {
-            console.error("Oisann! Klarte ikke å laste inn Pokémon!");
-          }
-        };
-
-        //resultat fra API gjøres om til json-format
-        let result = await pokemonRequest.json();
-
-        //ForEach går gjennom results-arrayet //Tar imot Pokemonobjekt til parameter
-        //Fetcher alle pokemons
-        //Gjør om til json-format, await=venter til data er lastet opp
-        result.results.forEach(async (pokemon) => {
-          const pokemonRequest = await fetch(pokemon.url);
-          const pokemonData = await pokemonRequest.json();
-
-          //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
-          const pokemonNumber = pokemonData.id;
-
-          //Link til pokeAPIets github med bilderessurser
-          const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
-
-          //const pokemonCard = createElement("div");
-          // pokemonCard.innerHTML = `<img src="${imgCard} style="width: 75px" /> <h2>${pokemonData.name}</h2> <h3>${pokemonData.type}</h3>`;
-
-          //lager ny div med informasjonen fra APIet
-          //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
-          const pokemonCard = document.createElement("div");
-          pokemonCard.innerHTML = `
-              <p>Navn: ${pokemonData.name}</p>
-              <p>Type: ${pokemonData.types[0].type.name}</p>`;
-
-          //legge til nytt element(bilde)
-          const imgCard = document.createElement("img");
-          imgCard.src = pokemonImageUrl;
-          pokemonCard.appendChild(imgCard);
-
-          //legge til knapper
-          const saveBtn = document.createElement("button");
-          saveBtn.textContent = "Lagre";
-          saveBtn.style.width = "50px";
-
-          saveBtn.addEventListener("click", () => {
-            const pokemonName = pokemonData.name;
-            let savedPokemon =
-              JSON.parse(localStorage.getItem("savedPokemon")) || [];
-            savedPokemon.push(pokemonName);
-            localStorage.setItem(pokemonName, JSON.stringify(pokemonData.name));
-          });
-
-          const deleteBtn = document.createElement("button");
-          deleteBtn.textContent = "Slett";
-          deleteBtn.style.width = "50px";
-
-          const editBtn = document.createElement("button");
-          editBtn.textContent = "Endre";
-          editBtn.style.width = "50px";
-
-          pokemonCard.appendChild(saveBtn);
-          pokemonCard.appendChild(deleteBtn);
-          pokemonCard.appendChild(editBtn);
-
-          //appendChild for å lage underelement av ShowAllPokemon, og funksjonen gjør at info vises på nettsiden.
-          showAllDiv.appendChild(pokemonCard);
-        });
-      }
-
-      async function savedPokemonSetUp() {
         try {
-          savedPokemon = JSON.parse(localStorage.getItem("savedPokemon")) || [];
+          const pokemonRequest = await fetch(
+            "https://pokeapi.co/api/v2/pokemon/?limit=50"
+          );
+          //resultat fra API gjøres om til json-format
+          let result = await pokemonRequest.json();
 
-          nextPokemon = savedPokemon.length + 1;
-
-          if (nextPokemon <= 5) {
-            savedPokemon.push(selectedPokemon);
-            localStorage.setItem("savedPokemon", JSON.stringify(savedPokemon));
-          } else if (nextPokemon >= 6) {
-            alert(
-              "Du kan ikke lagre flere Pokémons! Vennligst slett en Pokémon for å fortsette"
-            );
-          }
-        } catch {
-          console.error("Klarte ikke å lagre pokemons");
+          result.results.forEach(async (pokemon) => {
+            const pokemonRequest = await fetch(pokemon.url);
+            const pokemonData = await pokemonRequest.json();
+          });
+        } catch (error) {
+          console.error("Oisann! Klarte ikke å laste inn Pokémon!", error);
         }
       }
+      /*
+            //ForEach går gjennom results-arrayet //Tar imot Pokemonobjekt til parameter
+            //Fetcher alle pokemons
+            //Gjør om til json-format, await=venter til data er lastet opp
 
-      //kalle på funksjonen
+
+              //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
+              const pokemonNumber = pokemonData.id;
+
+              //Link til pokeAPIets github med bilderessurser
+              const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
+
+              //const pokemonCard = createElement("div");
+              // pokemonCard.innerHTML = `<img src="${imgCard} style="width: 75px" /> <h2>${pokemonData.name}</h2> <h3>${pokemonData.type}</h3>`;
+
+              //lager ny div med informasjonen fra APIet
+              //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
+              const pokemonCard = document.createElement("div");
+              pokemonCard.innerHTML = `
+                    <p>Navn: ${pokemonData.name}</p>
+                    <p>Type: ${pokemonData.types[0].type.name}</p>`;
+
+              //legge til nytt element(bilde)
+              const imgCard = document.createElement("img");
+              imgCard.src = pokemonImageUrl;
+              pokemonCard.appendChild(imgCard);
+
+              //legge til knapper
+              const saveBtn = document.createElement("button");
+              saveBtn.textContent = "Lagre";
+              saveBtn.style.width = "50px";
+
+              saveBtn.addEventListener("click", () => {
+                const pokemonName = pokemonData.name;
+                let savedPokemon =
+                  JSON.parse(localStorage.getItem("savedPokemon")) || [];
+                if (nextPokemon <= 5) {
+                  savedPokemon.push(savedPokemon);
+                  localStorage.setItem("savedPokemon", JSON.stringify(savedPokemon));
+                } else if (nextPokemon >= 6) {
+                  alert(
+                    "Du kan ikke lagre flere Pokémons! Vennligst slett en Pokémon for å fortsette"
+                  );
+                  savedPokemon.push(pokemonName);
+                  localStorage.setItem(pokemonName, JSON.stringify(pokemonData.name));
+                  savedPokemonSetUp();
+                }
+              });
+
+              const deleteBtn = document.createElement("button");
+              deleteBtn.textContent = "Slett";
+              deleteBtn.style.width = "50px";
+
+              const editBtn = document.createElement("button");
+              editBtn.textContent = "Endre";
+              editBtn.style.width = "50px";
+
+              pokemonCard.appendChild(saveBtn);
+              pokemonCard.appendChild(deleteBtn);
+              pokemonCard.appendChild(editBtn);
+
+              //appendChild for å lage underelement av ShowAllPokemon, og funksjonen gjør at info vises på nettsiden.
+              showAllPokemon.appendChild(pokemonCard);
+            });
+
+            async function savedPokemonSetUp() {
+              try {
+                savedPokemon = JSON.parse(localStorage.getItem("savedPokemon")) || [];
+
+                let nextPokemon = savedPokemon.length + 5;
+
+                if (nextPokemon <= 5) {
+                  savedPokemon.push(savedPokemon);
+                  localStorage.setItem("savedPokemon", JSON.stringify(savedPokemon));
+                } else if (nextPokemon >= 6) {
+                  alert(
+                    "Du kan ikke lagre flere Pokémons! Vennligst slett en Pokémon for å fortsette"
+                  );
+                }
+              } catch {
+                console.error("Klarte ikke å lagre pokemons");
+              }
+            }
+
+            //kalle på funksjonen*/
       fetchPokemon();
+
       savedPokemonSetUp();
-      console.log(savedPokemonSetUp);
     </script>
   </body>
 </html>
