@@ -85,6 +85,26 @@
 
       //kalle på funksjonen
       fetchPokemon();
+
+      //FILTER
+
+      async function fetchPokemonTypes() {
+        try {
+          const fetchTypesRequest = await fetch(
+            "https://pokeapi.co/api/v2/type"
+          );
+          const pokemonTypeData = await fetchTypesRequest.json();
+          allPokemonTypes = pokemonTypeData.results;
+          const pokemonTypes = pokemonTypeData.result.slice(0, 18);
+          createFilterBtn();
+        } catch (error) {
+          console.error("Feil ved lasting av type Pokemon", error);
+        }
+      }
+
+      function createFilterBtn(types) {
+        const filterBtnContainer = document.getElementById("filter-buttons");
+      }
     </script>
   </body>
 </html>
