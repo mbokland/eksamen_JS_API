@@ -16,6 +16,8 @@
       //Her hentes div ifra HTML
       const showAllPokemon = document.querySelector("#show-all-pokemon");
 
+      let allPokemons = []; //Array til å lagre fetchet pokemons!! viktig
+
       //Fetcher APIet's pokemon (etter anvist i dokumentasjonen)
       async function fetchPokemon() {
         try {
@@ -23,60 +25,74 @@
             "https://pokeapi.co/api/v2/pokemon/?limit=50"
           );
 
-          let result = await pokemonRequest.json();
-
-          //ForEach går gjennom results-arrayet //Tar imot Pokemonobjekt til parameter
-          //Fetcher alle pokemons
-          //Gjør om til json-format, await=venter til data er lastet opp
-          result.results.forEach(async (pokemon) => {
-            const pokemonRequest = await fetch(pokemon.url);
-            const pokemonData = await pokemonRequest.json();
-
-            //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
-            const pokemonNumber = pokemonData.id;
-
-            //Link til pokeAPIets github med bilderessurser
-            const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
-
-            //lager ny div med informasjonen fra APIet
-            //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
-            const pokemonCard = document.createElement("div");
-            pokemonCard.innerHTML = `
-                <p>Navn: ${pokemonData.name}</p>
-                <p>Type: ${pokemonData.types[0].type.name}</p>`;
-
-            //legge til nytt element(bilde)
-            const imgCard = document.createElement("img");
-            imgCard.src = pokemonImageUrl;
-            pokemonCard.appendChild(imgCard);
-
-            //legge til knapper i pokemonCard
-            const saveBtn = document.createElement("button");
-            saveBtn.textContent = "Lagre";
-            saveBtn.style.width = "50px";
-
-            const deleteBtn = document.createElement("button");
-            deleteBtn.textContent = "Slett";
-            deleteBtn.style.width = "50px";
-
-            const editBtn = document.createElement("button");
-            editBtn.textContent = "Endre";
-            editBtn.style.width = "50px";
-
-            pokemonCard.appendChild(saveBtn);
-            pokemonCard.appendChild(deleteBtn);
-            pokemonCard.appendChild(editBtn);
-
-            //appendChild for å lage underelement av ShowAllPokemon, og funksjonen gjør at info vises på nettsiden.
-            showAllPokemon.appendChild(pokemonCard);
-          });
+          const result = await pokemonRequest.json();
+          const pokemonUrls = result.results.map((pokemon) => pokemon.url);
+          const pokemonData = await Promise.all(
+            pokemonUrls.map((url) =>
+              fetch(url).then((response) => response.json())
+            )
+          );
+          allPokemons = pokemonData;
+          displayPokemons(allPokemons);
+          fetchPokemonTypes();
         } catch {
           console.error("Oisann! Klarte ikke å laste inn Pokémon!");
         }
       }
 
-      //kalle på funksjonen
-      fetchPokemon();
+      //ForEach går gjennom results-arrayet //Tar imot Pokemonobjekt til parameter
+      //Fetcher alle pokemons
+      //Gjør om til json-format, await=venter til data er lastet opp
+      /*result.results.forEach(async (pokemon) => {
+            const pokemonRequest = await fetch(pokemon.url);
+            const pokemonData = await pokemonRequest.json();
+                  */
+
+      function displayPokemons(pokemons) {
+        showAllPokemon.innerHTML = "";
+        pokemons.forEach((pokemon) => {
+          const pokemonCard = createPokemonCard(pokemon);
+          showAllPokemon.appendChild(pokemonCard);
+        });
+      }
+
+      function createPokemonCard(pokemon) {
+        //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
+        const pokemonNumber = pokemon.id;
+        //Link til pokeAPIets github med bilderessurser
+        const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
+
+        //lager ny div med informasjonen fra APIet
+        //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
+        const pokemonCard = document.createElement("div");
+        pokemonCard.innerHTML = `
+                <p>Navn: ${pokemon.name}</p>
+                <p>Type: ${pokemon.types[0].type.name}</p>`;
+
+        //legge til nytt element(bilde)
+        const imgCard = document.createElement("img");
+        imgCard.src = pokemonImageUrl;
+        pokemonCard.appendChild(imgCard);
+
+        //legge til knapper i pokemonCard
+        const saveBtn = document.createElement("button");
+        saveBtn.textContent = "Lagre";
+        saveBtn.style.width = "50px";
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Slett";
+        deleteBtn.style.width = "50px";
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Endre";
+        editBtn.style.width = "50px";
+
+        pokemonCard.appendChild(saveBtn);
+        pokemonCard.appendChild(deleteBtn);
+        pokemonCard.appendChild(editBtn);
+
+        return pokemonCard;
+      }
 
       //FILTER
 
@@ -110,66 +126,12 @@
         });
       }
 
-      async function fetchPokemonByType(type) {
-        try {
-          const response = await fetch(
-            `https://pokeapi.co/api/v2/type/${type}`
-          );
-          const pokemonTypeData = await response.json();
-          const pokemons = pokemonTypeData.pokemon;
-
-          showAllPokemon.innerHTML = ""; //sletter ordinære 50 pokemons når fetchPokemonByType blir kalt
-          await displayFilteredPokemons(pokemons);
-        } catch (error) {
-          console.error(
-            `Klarte ikke å laste inn pokemon av type ${type}`,
-            error
-          );
-        }
-      }
-
-      function displayFilteredPokemons(pokemons) {
-        pokemons.forEach(async (pokemon) => {
-          const pokemonRequest = await fetch(pokemon.url);
-          const pokemonData = await pokemonRequest.json();
-
-          const pokemonNumber = pokemonData.id;
-
-          //Link til pokeAPIets github med bilderessurser
-          const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
-
-          //lager ny div med informasjonen fra APIet
-          //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
-          const pokemonCard = document.createElement("div");
-          pokemonCard.innerHTML = `
-                <p>Navn: ${pokemonData.name}</p>
-                <p>Type: ${pokemonData.types[0].type.name}</p>`;
-
-          //legge til nytt element(bilde)
-          const imgCard = document.createElement("img");
-          imgCard.src = pokemonImageUrl;
-          pokemonCard.appendChild(imgCard);
-
-          //legge til knapper i pokemonCard
-          const saveBtn = document.createElement("button");
-          saveBtn.textContent = "Lagre";
-          saveBtn.style.width = "50px";
-
-          const deleteBtn = document.createElement("button");
-          deleteBtn.textContent = "Slett";
-          deleteBtn.style.width = "50px";
-
-          const editBtn = document.createElement("button");
-          editBtn.textContent = "Endre";
-          editBtn.style.width = "50px";
-
-          pokemonCard.appendChild(saveBtn);
-          pokemonCard.appendChild(deleteBtn);
-          pokemonCard.appendChild(editBtn);
-
-          //appendChild for å lage underelement av ShowAllPokemon, og funksjonen gjør at info vises på nettsiden.
-          showAllPokemon.appendChild(pokemonCard);
+      async function fetchPokemonByType(typeName) {
+        const filteredPokemons = allPokemons.filter((pokemon) => {
+          return pokemon.types.some((type) => type.type.name === typeName);
         });
+
+        displayPokemons(filteredPokemons);
       }
 
       const clearFilterBtn = document.getElementById("clear-filter");
@@ -178,7 +140,7 @@
         fetchPokemon();
       });
 
-      fetchPokemonTypes();
+      fetchPokemon();
     </script>
   </body>
 </html>
