@@ -69,6 +69,9 @@
         const saveBtn = document.createElement("button");
         saveBtn.textContent = "Lagre";
         saveBtn.style.width = "50px";
+        saveBtn.addEventListener("click", () => {
+          savePokemon(pokemon);
+        });
 
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Slett";
@@ -130,6 +133,19 @@
         showAllPokemon.innerHTML = "";
         fetchPokemon();
       });
+
+      function savePokemon(pokemon) {
+        let savedPokemons =
+          JSON.parse(localStorage.getItem("savedPokemons")) || [];
+        if (savedPokemons.length < 5) {
+          savedPokemons.push(pokemon);
+          localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons));
+        } else {
+          alert(
+            "Du kan ikke lagre flere Pokemon! Vennligst slett en Pokemon for å fotsette"
+          );
+        }
+      }
 
       fetchPokemon();
     </script>
