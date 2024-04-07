@@ -40,14 +40,6 @@
         }
       }
 
-      //ForEach går gjennom results-arrayet //Tar imot Pokemonobjekt til parameter
-      //Fetcher alle pokemons
-      //Gjør om til json-format, await=venter til data er lastet opp
-      /*result.results.forEach(async (pokemon) => {
-            const pokemonRequest = await fetch(pokemon.url);
-            const pokemonData = await pokemonRequest.json();
-                  */
-
       function displayPokemons(pokemons) {
         showAllPokemon.innerHTML = "";
         pokemons.forEach((pokemon) => {
