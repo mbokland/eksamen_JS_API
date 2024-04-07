@@ -88,9 +88,8 @@
             "https://pokeapi.co/api/v2/type"
           );
           const pokemonTypeData = await fetchTypesRequest.json();
-          allPokemonTypes = pokemonTypeData.results;
-          const pokemonTypes = pokemonTypeData.results.slice(0, 18);
-          createFilterBtn(pokemonTypes);
+          allPokemonTypes = pokemonTypeData.results.slice(0, 18);
+          createFilterBtn(allPokemonTypes);
         } catch (error) {
           console.error("Feil ved lasting av type Pokemon", error);
         }
@@ -105,7 +104,7 @@
           const pokemonTypeBtn = document.createElement("button");
           pokemonTypeBtn.textContent = type.name;
           pokemonTypeBtn.addEventListener("click", () => {
-            fetchPokemonTypes(type.name);
+            fetchPokemonByType(type.name);
           });
           filterBtnContainer.appendChild(pokemonTypeBtn);
         });
@@ -122,11 +121,62 @@
           showAllPokemon.innerHTML = ""; //sletter ordinære 50 pokemons når fetchPokemonByType blir kalt
           await displayFilteredPokemons(pokemons);
         } catch (error) {
-          console.error("Klarte ikke å laste inn pokemon av type ${}", error);
+          console.error(
+            `Klarte ikke å laste inn pokemon av type ${type}`,
+            error
+          );
         }
       }
 
-      function displayFilteredPokemons(pokemon) {}
+      function displayFilteredPokemons(pokemons) {
+        pokemons.forEach(async (pokemon) => {
+          const pokemonRequest = await fetch(pokemon.url);
+          const pokemonData = await pokemonRequest.json();
+
+          const pokemonNumber = pokemonData.id;
+
+          //Link til pokeAPIets github med bilderessurser
+          const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
+
+          //lager ny div med informasjonen fra APIet
+          //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
+          const pokemonCard = document.createElement("div");
+          pokemonCard.innerHTML = `
+                <p>Navn: ${pokemonData.name}</p>
+                <p>Type: ${pokemonData.types[0].type.name}</p>`;
+
+          //legge til nytt element(bilde)
+          const imgCard = document.createElement("img");
+          imgCard.src = pokemonImageUrl;
+          pokemonCard.appendChild(imgCard);
+
+          //legge til knapper i pokemonCard
+          const saveBtn = document.createElement("button");
+          saveBtn.textContent = "Lagre";
+          saveBtn.style.width = "50px";
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Slett";
+          deleteBtn.style.width = "50px";
+
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Endre";
+          editBtn.style.width = "50px";
+
+          pokemonCard.appendChild(saveBtn);
+          pokemonCard.appendChild(deleteBtn);
+          pokemonCard.appendChild(editBtn);
+
+          //appendChild for å lage underelement av ShowAllPokemon, og funksjonen gjør at info vises på nettsiden.
+          showAllPokemon.appendChild(pokemonCard);
+        });
+      }
+
+      const clearFilterBtn = document.getElementById("clear-filter");
+      clearFilterBtn.addEventListener("click", () => {
+        showAllPokemon.innerHTML = "";
+        fetchPokemon();
+      });
 
       fetchPokemonTypes();
     </script>
