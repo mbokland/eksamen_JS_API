@@ -11,7 +11,7 @@
     <div id="filter-buttons"></div>
     <div id="show-all-pokemon"></div>
     <div id="pokemon-container"></div>
-    <div id="saved-pokemon-card"><h3>Mine lagrede Pokemons</h3></div>
+    <div id="saved-pokemon-card"></div>
 
     <script>
       //Her hentes div ifra HTML
@@ -153,7 +153,7 @@
             );
 
             const savedPokemonHeader = document.createElement("h3");
-            savedPokemonHeader.textContent = "Dine lagrede Pokemons";
+            savedPokemonHeader.textContent = "Mine lagrede Pokemons";
 
             const savedPokemonContainer =
               document.getElementById("saved-pokemon-card");
@@ -174,12 +174,17 @@
       function displaySavedPokemons() {
         const savedPokemonContainer =
           document.getElementById("saved-pokemon-card");
-        savedPokemonContainer.innerHTML = "";
+        const savedPokemonHeader = savedPokemonContainer.querySelector("h3");
 
         const savedPokemons =
           JSON.parse(localStorage.getItem("savedPokemons")) || [];
 
         savedPokemons.forEach((pokemon, index) => {
+          const savedPokemonCard = createPokemonCard(pokemon);
+          savedPokemonContainer.appendChild(savedPokemonCard);
+        });
+      }
+      /*
           const savedPokemonCard = document.createElement("div");
           savedPokemonCard.classList.add("saved-pokemon-card");
 
@@ -187,16 +192,13 @@
           pokemonCard.innerHTML = `
                 <p>Navn: ${pokemon.name}</p>
                 <p>Type: ${pokemon.types[0].type.name}</p>`;
+      
 
           //legge til nytt element(bilde)
           const imgCard = document.createElement("img");
           imgCard.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`;
           pokemonCard.appendChild(imgCard);
-
-          savedPokemonCard.appendChild(pokemonCard);
-          savedPokemonContainer.appendChild(savedPokemonCard);
-        });
-      }
+*/
 
       function deletePokemon(pokemon) {
         const confirmDelete = confirm(
@@ -208,7 +210,7 @@
           );
           localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons));
 
-          displaySavedPokemons();
+          createPokemonCard(pokemon);
         }
       }
 
