@@ -86,7 +86,7 @@
 
           //Edit
           const editBtn = document.createElement("button");
-          editBtn.innerHTML = "Endre";
+          editBtn.innerHTML = "Rediger";
           editBtn.addEventListener("click", function () {
             editPokemon(pokemon);
           });
@@ -170,7 +170,7 @@
             document.getElementById("saved-pokemon-card");
           savedPokemonContainer.innerHTML = "";
 
-          const savedPokemonHeader = document.createElement("h3");
+          const savedPokemonHeader = document.createElement("h2");
           savedPokemonHeader.textContent = "Mine lagrede Pokémons:";
           savedPokemonContainer.appendChild(savedPokemonHeader);
 
