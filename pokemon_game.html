@@ -81,8 +81,7 @@
         deleteBtn.style.width = "50px";
         deleteBtn.addEventListener("click", () => {
           deletePokemon(pokemon);
-
-        }
+        });
 
         const editBtn = document.createElement("button");
         editBtn.textContent = "Endre";
@@ -98,6 +97,7 @@
       //FILTER
 
       let allPokemonTypes = [];
+      let savedPokemons = [];
 
       async function fetchPokemonTypes() {
         try {
@@ -195,6 +195,20 @@
             savedPokemonCard.appendChild(pokemonCard);
             savedPokemonContainer.appendChild(savedPokemonCard);
           });
+        }
+      }
+
+      function deletePokemon(pokemon) {
+        const confirmDelete = confirm(
+          `Er du sikker på at du vil slette ${pokemon.name}?`
+        );
+        if (confirmDelete) {
+          savedPokemons = savedPokemons.filter(
+            (selectedPokemon) => selectedPokemon !== pokemon
+          );
+          localStorage.setItem("savedPokemon", JSON.stringify(savedPokemons));
+
+          displaySavedPokemons();
         }
       }
 
