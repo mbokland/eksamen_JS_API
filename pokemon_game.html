@@ -51,6 +51,7 @@
         }
 
         function createPokemonCard(pokemon) {
+          console.log("Edit button created");
           //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
           const pokemonNumber = pokemon.id;
           //Link til pokeAPIets github med bilderessurser
@@ -86,8 +87,15 @@
             console.log("delete button clicked");
           });
 
+          //Edit
+          const nameInput = document.createElement("input");
+          nameInput.type = "text";
+          nameInput.placeholder = "skriv inn navn på Pokemon:";
+          nameInput.id = `nameInput-${index}`;
+
           const editBtn = document.createElement("button");
-          editBtn.textContent = "Endre";
+          editBtn.innerHTML = "Endre";
+          editBtn.addEventListener("click", function () editPokemon(index));
           editBtn.style.width = "50px";
 
           pokemonCard.appendChild(saveBtn);
@@ -181,6 +189,7 @@
             savedPokemonContainer.appendChild(savedPokemonCard);
           });
         }
+
         function deletePokemon(pokemon) {
           const confirmDelete = confirm(
             `Er du sikker på at du vil slette ${pokemon.name}?`
@@ -198,10 +207,45 @@
             }
           }
         }
+
+        function editPokemon(selectedPokemon) {
+          const newPokemonName = prompt("Skriv inn det nye navnet:");
+          const newPokemonType = prompt("Skriv inn hvilken type den skal ha:");
+          console.log("Nytt navn:", newPokemonName);
+          console.log("Ny type:", newPokemonType);
+          if (newPokemonName && newPokemonType) {
+            Pokemon.name = newPokemonName;
+            selectedPokemon.type = newPokemonType;
+            console.log("Endret Pokemon:", selectedPokemon);
+            localStorage.setItem(
+              "savedPokemons",
+              JSON.stringify(savedPokemons)
+            );
+            displaySavedPokemons();
+          }
+        }
+
         function loadSavedPokemons() {
           savedPokemons =
             JSON.parse(localStorage.getItem("savedPokemons")) || [];
           displaySavedPokemons();
+        }
+        /*
+        function addName() {
+          const newPokemonName = prompt("Skriv inn nytt navn:");
+          localStorage.setItem("name", newPokemonName);
+        }
+
+        function updatePokemonName() {
+          nameTxt.innerHTML = `Navn: ${localStorage.getItem("name")}`;
+        }*/
+
+        function editPokemon(index) {
+          const newPokemonName = document.getElementById(`nameInput-${index}`).value;
+
+          allPokemons[index].name = newPokemonName;
+
+          showAllPokemon();
         }
 
         fetchPokemon();
