@@ -182,20 +182,20 @@
           });
         }
         function deletePokemon(pokemon) {
-          console.log("inne i deletePokemon");
           const confirmDelete = confirm(
             `Er du sikker på at du vil slette ${pokemon.name}?`
           );
           if (confirmDelete) {
-            savedPokemons = savedPokemons.filter(
-              (selectedPokemon) => selectedPokemon !== pokemon
-            );
-            localStorage.setItem(
-              "savedPokemons",
-              JSON.stringify(savedPokemons)
-            );
+            const index = savedPokemons.findIndex((p) => p.id === pokemon.id);
+            if (index !== -1) {
+              savedPokemons.splice(index, 1);
+              localStorage.setItem(
+                "savedPokemons",
+                JSON.stringify(savedPokemons)
+              );
 
-            displaySavedPokemons();
+              displaySavedPokemons();
+            }
           }
         }
 
