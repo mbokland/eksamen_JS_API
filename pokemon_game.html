@@ -157,7 +157,7 @@
 
         async function fetchPokemonByType(typeName) {
           const filteredPokemons = allPokemons.filter((pokemon) => {
-            return pokemon.types.some((type) => type.type.name === typeName);
+            return pokemon.types[0].type.name === typeName;
           });
 
           displayPokemons(filteredPokemons);
