@@ -174,7 +174,7 @@
 
         function displaySavedPokemons() {
           const savedPokemonContainer =
-            document.getElementById("saved-pokemon-card");
+          document.getElementById("saved-pokemon-card");
           savedPokemonContainer.innerHTML = "";
 
           const savedPokemonHeader = document.createElement("h3");
@@ -182,11 +182,14 @@
           savedPokemonContainer.appendChild(savedPokemonHeader);
 
           const savedPokemons =
-            JSON.parse(localStorage.getItem("savedPokemons")) || [];
+          JSON.parse(localStorage.getItem("savedPokemons")) || [];
 
           savedPokemons.forEach((pokemon, index) => {
-            const savedPokemonCard = createPokemonCard(pokemon);
-            savedPokemonContainer.appendChild(savedPokemonCard);
+          const savedPokemonCard = createPokemonCard(pokemon);
+          savedPokemonContainer.appendChild(savedPokemonCard);
+
+          editBtn = editPokemon();
+
           });
         }
 
