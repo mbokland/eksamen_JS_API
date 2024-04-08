@@ -51,7 +51,6 @@
         }
 
         function createPokemonCard(pokemon) {
-          console.log("Edit button created");
           //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
           const pokemonNumber = pokemon.id;
           //Link til pokeAPIets github med bilderessurser
@@ -75,7 +74,6 @@
           saveBtn.style.width = "50px";
           saveBtn.addEventListener("click", () => {
             savePokemon(pokemon);
-
             displaySavedPokemons();
           });
 
@@ -84,19 +82,14 @@
           deleteBtn.style.width = "50px";
           deleteBtn.addEventListener("click", () => {
             deletePokemon(pokemon);
-            console.log("delete button clicked");
           });
 
           //Edit
-          const nameInput = document.createElement("input");
-          nameInput.type = "text";
-          nameInput.placeholder = "skriv inn navn på Pokemon:";
-          nameInput.id = `nameInput-${index}`;
-
           const editBtn = document.createElement("button");
           editBtn.innerHTML = "Endre";
-          editBtn.addEventListener("click", function () editPokemon(index));
-          editBtn.style.width = "50px";
+          editBtn.addEventListener("click", function () {
+            editPokemon(pokemon);
+          });
 
           pokemonCard.appendChild(saveBtn);
           pokemonCard.appendChild(deleteBtn);
@@ -174,7 +167,7 @@
 
         function displaySavedPokemons() {
           const savedPokemonContainer =
-          document.getElementById("saved-pokemon-card");
+            document.getElementById("saved-pokemon-card");
           savedPokemonContainer.innerHTML = "";
 
           const savedPokemonHeader = document.createElement("h3");
@@ -182,14 +175,13 @@
           savedPokemonContainer.appendChild(savedPokemonHeader);
 
           const savedPokemons =
-          JSON.parse(localStorage.getItem("savedPokemons")) || [];
+            JSON.parse(localStorage.getItem("savedPokemons")) || [];
 
           savedPokemons.forEach((pokemon, index) => {
-          const savedPokemonCard = createPokemonCard(pokemon);
-          savedPokemonContainer.appendChild(savedPokemonCard);
+            const savedPokemonCard = createPokemonCard(pokemon);
+            savedPokemonContainer.appendChild(savedPokemonCard);
 
-          editBtn = editPokemon();
-
+            editBtn = editPokemon();
           });
         }
 
@@ -244,7 +236,9 @@
         }*/
 
         function editPokemon(index) {
-          const newPokemonName = document.getElementById(`nameInput-${index}`).value;
+          const newPokemonName = document.getElementById(
+            `nameInput-${index}`
+          ).value;
 
           allPokemons[index].name = newPokemonName;
 
