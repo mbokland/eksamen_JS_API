@@ -10,7 +10,7 @@
 
     <button id="clear-filter">Fjern filter</button>
     <div id="filter-buttons"></div>
-
+    <h2>Lag din egen Pokémon!</h2>
     <input
       type="text"
       placeholder="Skriv inn navn på din nye Pokémon"
@@ -204,7 +204,7 @@
             document.getElementById("saved-pokemon-card");
           savedPokemonContainer.innerHTML = "";
 
-          const savedPokemonHeader = document.createElement("h2");
+          const savedPokemonHeader = document.createElement("h3");
           savedPokemonHeader.textContent = "Mine lagrede Pokémons:";
           savedPokemonContainer.appendChild(savedPokemonHeader);
 
