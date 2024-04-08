@@ -56,8 +56,8 @@
           //Link til pokeAPIets github med bilderessurser
           const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
 
-        const pokemonType = pokemon.types[0].type.name;
-        const pokemonColor = typeColors[pokemonType];
+          const pokemonType = pokemon.types[0].type.name;
+          const pokemonColor = typeColors[pokemonType];
 
           //lager ny div med informasjonen fra APIet
           //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
@@ -67,101 +67,6 @@
                     <p>Type: ${pokemon.types[0].type.name}</p>`;
 
           pokemonCard.style.backgroundColor = pokemonColor;
-
-        //legge til nytt element(bilde)
-          const imgCard = document.createElement("img");
-          imgCard.src = pokemonImageUrl;
-          pokemonCard.appendChild(imgCard);
-
-          //legge til knapper i pokemonCard
-          const saveBtn = document.createElement("button");
-          saveBtn.textContent = "Lagre";
-          saveBtn.style.width = "50px";
-          saveBtn.addEventListener("click", () => {
-            savePokemon(pokemon);
-            displaySavedPokemons();
-          });
-
-          const deleteBtn = document.createElement("button");
-          deleteBtn.textContent = "Slett";
-          deleteBtn.style.width = "50px";
-          deleteBtn.addEventListener("click", () => {
-            deletePokemon(pokemon);
-          });
-
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "Endre";
-        editBtn.style.width = "50px";
-
-        pokemonCard.appendChild(saveBtn);
-        pokemonCard.appendChild(deleteBtn);
-        pokemonCard.appendChild(editBtn);
-
-        return pokemonCard;
-      }
-
-      //FILTER
-
-      let allPokemonTypes = [];
-      const typeColors = {
-        normal: `#E4BFC9`,
-        fighting: `#EF9E87`,
-        flying: `#91AFC3`,
-        poison: `#8C76A2`,
-        ground: `#DDBD95`,
-        rock: `#7D5047`,
-        bug: `#7DAB89`,
-        ghost: `#B897B8`,
-        steel: `#97DFC7`,
-        fire: `#FA8791`,
-        water: `#7F9FE8`,
-        grass: `#93BBA0`,
-        electric: `#F8F8B4`,
-        psycich: `#E88CBE`,
-        ice: `#E7F5FD`,
-        dragon: `#A5CDD4`,
-        dark: `#A2A2A3`,
-        fairy: `#EBACC5`,
-      };
-
-      async function fetchPokemonTypes() {
-        try {
-          const fetchTypesRequest = await fetch(
-            "https://pokeapi.co/api/v2/type"
-          );
-          const pokemonTypeData = await fetchTypesRequest.json();
-          allPokemonTypes = pokemonTypeData.results.slice(0, 18);
-          createFilterBtn(allPokemonTypes);
-        } catch (error) {
-          console.error("Feil ved lasting av type Pokemon", error);
-        }
-      }
-
-      function createFilterBtn(pokemonTypes) {
-        const filterBtnContainer = document.getElementById("filter-buttons");
-
-        filterBtnContainer.innerHTML = ""; //Tømmer btn-container, så ikke knappene dobler seg
-
-        pokemonTypes.forEach((type) => {
-          const pokemonTypeBtn = document.createElement("button");
-          pokemonTypeBtn.textContent = type.name;
-          pokemonTypeBtn.addEventListener("click", () => {
-            fetchPokemonByType(type.name);
-          });
-        }
-
-        function createPokemonCard(pokemon) {
-          //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
-          const pokemonNumber = pokemon.id;
-          //Link til pokeAPIets github med bilderessurser
-          const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
-
-          //lager ny div med informasjonen fra APIet
-          //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
-          const pokemonCard = document.createElement("div");
-          pokemonCard.innerHTML = `
-                  <p>Navn: ${pokemon.name}</p>
-                  <p>Type: ${pokemon.types[0].type.name}</p>`;
 
           //legge til nytt element(bilde)
           const imgCard = document.createElement("img");
@@ -184,9 +89,9 @@
             deletePokemon(pokemon);
           });
 
-          //Edit
           const editBtn = document.createElement("button");
-          editBtn.innerHTML = "Rediger";
+          editBtn.textContent = "Endre";
+          editBtn.style.width = "50px";
           editBtn.addEventListener("click", function () {
             editPokemon(pokemon);
           });
@@ -201,27 +106,26 @@
         //FILTER
 
         let allPokemonTypes = [];
-      let allPokemonTypes = [];
-      const typeColors = {
-        normal: `#E4BFC9`,
-        fighting: `#EF9E87`,
-        flying: `#91AFC3`,
-        poison: `#8C76A2`,
-        ground: `#DDBD95`,
-        rock: `#7D5047`,
-        bug: `#7DAB89`,
-        ghost: `#B897B8`,
-        steel: `#97DFC7`,
-        fire: `#FA8791`,
-        water: `#7F9FE8`,
-        grass: `#93BBA0`,
-        electric: `#F8F8B4`,
-        psycich: `#E88CBE`,
-        ice: `#E7F5FD`,
-        dragon: `#A5CDD4`,
-        dark: `#A2A2A3`,
-        fairy: `#EBACC5`,
-      };
+        const typeColors = {
+          normal: `#E4BFC9`,
+          fighting: `#EF9E87`,
+          flying: `#91AFC3`,
+          poison: `#8C76A2`,
+          ground: `#DDBD95`,
+          rock: `#7D5047`,
+          bug: `#7DAB89`,
+          ghost: `#B897B8`,
+          steel: `#97DFC7`,
+          fire: `#FA8791`,
+          water: `#7F9FE8`,
+          grass: `#93BBA0`,
+          electric: `#F8F8B4`,
+          psycich: `#E88CBE`,
+          ice: `#E7F5FD`,
+          dragon: `#A5CDD4`,
+          dark: `#A2A2A3`,
+          fairy: `#EBACC5`,
+        };
 
         async function fetchPokemonTypes() {
           try {
