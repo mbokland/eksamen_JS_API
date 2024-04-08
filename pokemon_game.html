@@ -54,12 +54,17 @@
         //Link til pokeAPIets github med bilderessurser
         const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
 
+        const pokemonType = pokemon.types[0].type.name;
+        const pokemonColor = typeColors[pokemonType];
+
         //lager ny div med informasjonen fra APIet
         //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
         const pokemonCard = document.createElement("div");
         pokemonCard.innerHTML = `
-                <p>Navn: ${pokemon.name}</p>
-                <p>Type: ${pokemon.types[0].type.name}</p>`;
+                  <p>Navn: ${pokemon.name}</p>
+                  <p>Type: ${pokemon.types[0].type.name}</p>`;
+
+        pokemonCard.style.backgroundColor = pokemonColor;
 
         //legge til nytt element(bilde)
         const imgCard = document.createElement("img");
@@ -89,6 +94,26 @@
       //FILTER
 
       let allPokemonTypes = [];
+      const typeColors = {
+        normal: `#001122`,
+        fighting: `#001122`,
+        flying: `#001122`,
+        poison: `#001122`,
+        ground: `#001122`,
+        rock: `#001122`,
+        bug: `#001122`,
+        ghost: `#001122`,
+        steel: `#001122`,
+        fire: `#001122`,
+        water: `#001122`,
+        grass: `#001122`,
+        electric: `#001122`,
+        psycich: `#001122`,
+        ice: `#001122`,
+        drago: `#001122`,
+        dark: `#001122`,
+        fairy: `#001122`,
+      };
 
       async function fetchPokemonTypes() {
         try {
