@@ -180,8 +180,6 @@
           savedPokemons.forEach((pokemon, index) => {
             const savedPokemonCard = createPokemonCard(pokemon, index);
             savedPokemonContainer.appendChild(savedPokemonCard);
-
-            editBtn = editPokemon();
           });
         }
 
@@ -209,7 +207,7 @@
           console.log("Nytt navn:", newPokemonName);
           console.log("Ny type:", newPokemonType);
           if (newPokemonName && newPokemonType) {
-            Pokemon.name = newPokemonName;
+            selectedPokemon.name = newPokemonName;
             selectedPokemon.type = newPokemonType;
             console.log("Endret Pokemon:", selectedPokemon);
             localStorage.setItem(
