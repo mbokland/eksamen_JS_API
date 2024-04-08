@@ -14,9 +14,13 @@
     <input
       type="text"
       placeholder="Skriv inn navn på din nye Pokémon"
-      id="new-pokemon-name"
+      id="create-pokemon-name"
     />
-    <input type="text" placeholder="Skriv inn Pokémonens' nye type" />
+    <input
+      type="text"
+      placeholder="Skriv inn Pokémonens' nye type"
+      id="create-pokemon-type"
+    />
     <input type="button" value="Lag ny Pokémon!" id="create-btn" />
     <div id="create-pokemon"></div>
     <div id="show-all-pokemon"></div>
@@ -27,6 +31,9 @@
       document.addEventListener("DOMContentLoaded", function () {
         //Her hentes div ifra HTML
         const showAllPokemon = document.querySelector("#show-all-pokemon");
+        const createPokemonName = document.querySelector(
+          "#create-pokemon-name"
+        );
         let allPokemons = []; //Array til å lagre fetchet pokemons!! viktig
         let savedPokemons = [];
 
@@ -73,8 +80,8 @@
           //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
           const pokemonCard = document.createElement("div");
           pokemonCard.innerHTML = `
-                    <p>Navn: ${pokemon.name}</p>
-                    <p>Type: ${pokemon.types[0].type.name}</p>`;
+                          <p>Navn: ${pokemon.name}</p>
+                          <p>Type: ${pokemon.types[0].type.name}</p>`;
 
           pokemonCard.style.backgroundColor = pokemonColor;
 
@@ -105,6 +112,9 @@
           editBtn.addEventListener("click", function () {
             editPokemon(pokemon);
           });
+
+          const createBtn = document.querySelector("#create-btn");
+          createBtn.addEventListener("click", createPokemon);
 
           pokemonCard.appendChild(saveBtn);
           pokemonCard.appendChild(deleteBtn);
@@ -261,6 +271,21 @@
           savedPokemons =
             JSON.parse(localStorage.getItem("savedPokemons")) || [];
           displaySavedPokemons();
+        }
+
+        //create
+        function createPokemon() {
+          const createPokemonName = document.querySelector(
+            "#create-pokemon-name"
+          ).value;
+          const createPokemonType = document.querySelector(
+            "#create-pokemon-type"
+          ).value;
+          console.log(allPokemons);
+          allPokemons.unshift({
+            name: createPokemonName,
+            type: createPokemonType,
+          });
         }
 
         fetchPokemon();
