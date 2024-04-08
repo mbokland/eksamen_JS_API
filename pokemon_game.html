@@ -178,7 +178,7 @@
             JSON.parse(localStorage.getItem("savedPokemons")) || [];
 
           savedPokemons.forEach((pokemon, index) => {
-            const savedPokemonCard = createPokemonCard(pokemon);
+            const savedPokemonCard = createPokemonCard(pokemon, index);
             savedPokemonContainer.appendChild(savedPokemonCard);
 
             editBtn = editPokemon();
