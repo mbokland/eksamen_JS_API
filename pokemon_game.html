@@ -18,6 +18,7 @@
         //Her hentes div ifra HTML
         const showAllPokemon = document.querySelector("#show-all-pokemon");
         let allPokemons = []; //Array til å lagre fetchet pokemons!! viktig
+        let savedPokemons = [];
 
         //Fetcher APIet's pokemon (etter anvist i dokumentasjonen)
         async function fetchPokemon() {
@@ -99,7 +100,6 @@
         //FILTER
 
         let allPokemonTypes = [];
-        let savedPokemons = [];
 
         async function fetchPokemonTypes() {
           try {
@@ -198,8 +198,14 @@
             }
           }
         }
+        function loadSavedPokemons() {
+          savedPokemons =
+            JSON.parse(localStorage.getItem("savedPokemons")) || [];
+          displaySavedPokemons();
+        }
 
         fetchPokemon();
+        loadSavedPokemons();
       });
     </script>
   </body>
