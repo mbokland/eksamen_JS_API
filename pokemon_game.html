@@ -141,7 +141,7 @@
         fetchPokemon();
       });
 
-      function savePokemon(pokemon) {
+      async function savePokemon(pokemon) {
         try {
           savedPokemons =
             JSON.parse(localStorage.getItem("savedPokemons")) || [];
@@ -160,7 +160,7 @@
             savedPokemonContainer.innerHTML = "";
             savedPokemonContainer.appendChild(savedPokemonHeader);
 
-            displaySavedPokemons();
+            await displaySavedPokemons();
           } else {
             alert(
               "Du kan ikke lagre flere Pokemon! Vennligst slett en Pokemon for å fotsette"
@@ -169,33 +169,33 @@
         } catch {
           console.error("Klarte ikke å lagre denne Pokemon!");
         }
+      }
 
-        function displaySavedPokemons() {
-          const savedPokemonContainer =
-            document.getElementById("saved-pokemon-card");
-          savedPokemonContainer.innerHTML = "";
+      function displaySavedPokemons() {
+        const savedPokemonContainer =
+          document.getElementById("saved-pokemon-card");
+        savedPokemonContainer.innerHTML = "";
 
-          const savedPokemons =
-            JSON.parse(localStorage.getItem("savedPokemons")) || [];
+        const savedPokemons =
+          JSON.parse(localStorage.getItem("savedPokemons")) || [];
 
-          savedPokemons.forEach((pokemon, index) => {
-            const savedPokemonCard = document.createElement("div");
-            savedPokemonCard.classList.add("saved-pokemon-card");
+        savedPokemons.forEach((pokemon, index) => {
+          const savedPokemonCard = document.createElement("div");
+          savedPokemonCard.classList.add("saved-pokemon-card");
 
-            const pokemonCard = document.createElement("div");
-            pokemonCard.innerHTML = `
+          const pokemonCard = document.createElement("div");
+          pokemonCard.innerHTML = `
                 <p>Navn: ${pokemon.name}</p>
                 <p>Type: ${pokemon.types[0].type.name}</p>`;
 
-            //legge til nytt element(bilde)
-            const imgCard = document.createElement("img");
-            imgCard.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`;
-            pokemonCard.appendChild(imgCard);
+          //legge til nytt element(bilde)
+          const imgCard = document.createElement("img");
+          imgCard.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`;
+          pokemonCard.appendChild(imgCard);
 
-            savedPokemonCard.appendChild(pokemonCard);
-            savedPokemonContainer.appendChild(savedPokemonCard);
-          });
-        }
+          savedPokemonCard.appendChild(pokemonCard);
+          savedPokemonContainer.appendChild(savedPokemonCard);
+        });
       }
 
       function deletePokemon(pokemon) {
@@ -206,7 +206,7 @@
           savedPokemons = savedPokemons.filter(
             (selectedPokemon) => selectedPokemon !== pokemon
           );
-          localStorage.setItem("savedPokemon", JSON.stringify(savedPokemons));
+          localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons));
 
           displaySavedPokemons();
         }
