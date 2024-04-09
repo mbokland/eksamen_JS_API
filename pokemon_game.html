@@ -34,8 +34,10 @@
         const createPokemonName = document.querySelector(
           "#create-pokemon-name"
         );
+
         let allPokemons = []; //Array til å lagre fetchet pokemons!! viktig
         let savedPokemons = [];
+        let createPokemonId = 400; //Tildeler ny id til nye Pokémons
 
         //Fetcher APIet's pokemon (etter anvist i dokumentasjonen)
         async function fetchPokemon() {
@@ -80,8 +82,8 @@
           //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
           const pokemonCard = document.createElement("div");
           pokemonCard.innerHTML = `
-                                <p>Navn: ${pokemon.name}</p>
-                                <p>Type: ${pokemon.types[0].type.name}</p>`;
+          <p>Navn: ${pokemon.name}</p>
+          <p>Type: ${pokemon.types[0].type.name}</p>`;
 
           pokemonCard.style.backgroundColor = pokemonColor;
 
@@ -115,11 +117,6 @@
 
           const createBtn = document.querySelector("#create-btn");
           createBtn.addEventListener("click", createPokemon);
-          allPokemons.push({
-            name: "createPokemonName",
-            type: "createPokemonType",
-            img: getRandomImg(),
-          });
 
           pokemonCard.appendChild(saveBtn);
           pokemonCard.appendChild(deleteBtn);
@@ -163,21 +160,6 @@
           } catch (error) {
             console.error("Feil ved lasting av type Pokemon", error);
           }
-        }
-
-        function createFilterBtn(pokemonTypes) {
-          const filterBtnContainer = document.getElementById("filter-buttons");
-
-          filterBtnContainer.innerHTML = ""; //Tømmer btn-container, så ikke knappene dobler seg
-
-          pokemonTypes.forEach((type) => {
-            const pokemonTypeBtn = document.createElement("button");
-            pokemonTypeBtn.textContent = type.name;
-            pokemonTypeBtn.addEventListener("click", () => {
-              fetchPokemonByType(type.name);
-            });
-            filterBtnContainer.appendChild(pokemonTypeBtn);
-          });
         }
 
         async function fetchPokemonByType(typeName) {
@@ -253,10 +235,11 @@
 
         function editPokemon(selectedPokemon) {
           const newPokemonName = prompt("Skriv inn det nye navnet:");
-          const newPokemonType = prompt("Skriv inn hvilken type den skal ha:");
+          let newPokemonType = prompt("Skriv inn hvilken type den skal ha:");
 
           if (newPokemonName && newPokemonType) {
             selectedPokemon.name = newPokemonName;
+            newPokemonType = newPokemonType.toLowerCase();
             selectedPokemon.types[0].type.name = newPokemonType;
             const index = savedPokemons.findIndex(
               (p) => p.id === selectedPokemon.id
@@ -279,6 +262,21 @@
         }
 
         //create
+        function createFilterBtn(pokemonTypes) {
+          const filterBtnContainer = document.getElementById("filter-buttons");
+
+          filterBtnContainer.innerHTML = ""; //Tømmer btn-container, så ikke knappene dobler seg
+
+          pokemonTypes.forEach((type) => {
+            const pokemonTypeBtn = document.createElement("button");
+            pokemonTypeBtn.textContent = type.name;
+            pokemonTypeBtn.addEventListener("click", () => {
+              fetchPokemonByType(type.name);
+            });
+            filterBtnContainer.appendChild(pokemonTypeBtn);
+          });
+        }
+
         function createPokemon() {
           const createPokemonName = document.querySelector(
             "#create-pokemon-name"
@@ -287,12 +285,14 @@
             "#create-pokemon-type"
           ).value;
 
-          allPokemons.unshift({
+          const newPokemon = {
+            id: createPokemonId++,
             name: createPokemonName,
             types: [{ type: { name: createPokemonType } }],
             img: getRandomImg(),
-          });
+          };
 
+          allPokemons.unshift(newPokemon);
           displayPokemons(allPokemons);
         }
 
@@ -302,6 +302,16 @@
           );
           return randomPokemonImg[randomIndex];
         }
+        /*
+              function generateRandomId(pokemonNumber) {
+                const randomNumber = Math.floor(Math.random() * 500);
+                if (randomNumber !== pokemonNumber) {
+                  return randomNumber;
+                } else {
+                  return generateRandomId(pokemonNumber);
+                }
+              }*/
+
         fetchPokemon();
         loadSavedPokemons();
       });
