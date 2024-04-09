@@ -49,164 +49,192 @@
     </div>
 
     <script>
-      async function fetchRandomPokemon() {
-        console.log("Inne i fetchRandomPokemon");
-        try {
-          const randomPokemon = [];
-          for (let i = 0; i < 3; i++) {
-            const randomPokemonId = Math.floor(Math.random() * 400) + 1;
-            const randomPokemonRequest = await fetch(
-              "https://pokeapi.co/api/v2/pokemon/" + randomPokemonId
-            );
-            const randomPokemonData = await randomPokemonRequest.json();
-            randomPokemon.push(randomPokemonData);
-          }
+      let enemiesArray = [{
+          id: randomPokemonId,
+          name: randomPokemon.name,
+          maxHP: enemyHP,
+          currentHP: ememyCurrentHp,
+          damage: skillItem.id,
+          alive: true,
+      }]
 
-          return randomPokemon;
-        } catch {
-          console.error("Feil ved innlastning av Random Pokemon!");
-        }
-      }
+      let myPokemonsArray = [{
+        id: myPokemonId,
+        name: myPokemon.name,
+        maxHP: myPokemonHP,
+        currentHP: myPokemonCurrentHp,
+        damage: skillitem.id
+        alive: true,
+      }]
 
-      async function fetchRandomPokemonData(pokemonId) {
-        try {
-          const pokemonDataRequest = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
-          );
-          const data = await pokemonDataRequest.json();
-          return data;
-        } catch {
-          console.error("Klarte ikke å hente Pokemons HP");
-        }
-      }
 
-      async function fetchPokemonImg() {
-        try {
-          const randomPokemonData = await fetchRandomPokemon();
-          const enemyId = randomPokemonData[0].id;
-          const myPokemonId = randomPokemonData[1].id;
+            async function fetchRandomPokemon() {
+              console.log("Inne i fetchRandomPokemon");
+              try {
+                const randomPokemon = [];
+                for (let i = 0; i < 3; i++) {
+                  const randomPokemonId = Math.floor(Math.random() * 400) + 1;
+                  const randomPokemonRequest = await fetch(
+                    "https://pokeapi.co/api/v2/pokemon/" + randomPokemonId
+                  );
+                  const randomPokemonData = await randomPokemonRequest.json();
+                  randomPokemon.push(randomPokemonData);
+                }
 
-          const enemyImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${enemyId}.png`;
+                return randomPokemon;
+              } catch {
+                console.error("Feil ved innlastning av Random Pokemon!");
+              }
+            }
 
-          const myPokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${myPokemonId}.png`;
+            async function fetchRandomPokemonData(pokemonId) {
+              try {
+                const pokemonDataRequest = await fetch(
+                  `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
+                );
+                const data = await pokemonDataRequest.json();
+                return data;
+              } catch {
+                console.error("Klarte ikke å hente Pokemons HP");
+              }
+            }
 
-          const enemyContainer = document.querySelector(
-            ".enemy-container .img-container.enemy"
-          );
-          enemyContainer.innerHTML = `<img src="${enemyImgUrl}" alt="Fiendens bilde">`;
+            async function fetchPokemonImg() {
+              try {
+                const randomPokemonData = await fetchRandomPokemon();
+                const enemyId = randomPokemonData[0].id;
+                const myPokemonId = randomPokemonData[1].id;
 
-          const myPokemonContainer = document.querySelector(
-            ".my-pokemon-container .img-container"
-          );
-          myPokemonContainer.innerHTML = `<img src="${myPokemonImgUrl}" alt="Din Pokemons bilde">`;
-        } catch (error) {
-          console.error("Feil ved lasting av bilde", error);
-        }
-      }
+                const enemyImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${enemyId}.png`;
 
-      async function showPokemonImages() {
-        try {
-          await fetchPokemonImg();
-        } catch (error) {
-          console.error("Kunne ikke laste inn bilder", error);
-        }
-      }
+                const myPokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${myPokemonId}.png`;
 
-      async function addPokemonNameData() {
-        try {
-          const randomPokemon = await fetchRandomPokemon();
-          const enemyData = await fetchRandomPokemonData(randomPokemon[0].id);
-          const myPokemonData = await fetchRandomPokemonData(
-            randomPokemon[1].id
-          );
+                const enemyContainer = document.querySelector(
+                  ".enemy-container .img-container.enemy"
+                );
+                enemyContainer.innerHTML = `<img src="${enemyImgUrl}" alt="Fiendens bilde">`;
 
-          const getHP = (pokemonData) => {
-            return pokemonData.stats.find((stat) => stat.stat.name === "hp")
-              .base_stat;
-          };
+                const myPokemonContainer = document.querySelector(
+                  ".my-pokemon-container .img-container"
+                );
+                myPokemonContainer.innerHTML = `<img src="${myPokemonImgUrl}" alt="Din Pokemons bilde">`;
+              } catch (error) {
+                console.error("Feil ved lasting av bilde", error);
+              }
+            }
 
-          const enemyHP = getHP(enemyData);
-          const myPokemonHP = getHP(myPokemonData);
+            async function showPokemonImages() {
+              try {
+                await fetchPokemonImg();
+              } catch (error) {
+                console.error("Kunne ikke laste inn bilder", error);
+              }
+            }
 
-          document.querySelector("#enemy-name-txt").innerHTML =
-            randomPokemon[0].name;
-          document.querySelector(
-            "#enemy-health-txt"
-          ).innerHTML = `HP: ${enemyHP}`;
-          document.querySelector("#my-pokemon-name").innerHTML =
-            randomPokemon[1].name;
-          document.querySelector(
-            "#my-pokemon-health-txt"
-          ).innerHTML = `HP: ${myPokemonHP}`;
+            async function addPokemonNameData() {
+              try {
+                const randomPokemon = await fetchRandomPokemon();
+                const enemyData = await fetchRandomPokemonData(randomPokemon[0].id);
+                const myPokemonData = await fetchRandomPokemonData(
+                  randomPokemon[1].id
+                );
 
-          //Fetch og display skills (move)
-          //Oppdatere Attack-container med myPokemonMoves
-          const myPokemonMoves = myPokemonData.moves
-            .slice(0, 4)
-            .map((move) => move.move.name);
+                const getHP = (pokemonData) => {
+                  return pokemonData.stats.find((stat) => stat.stat.name === "hp")
+                    .base_stat;
+                };
 
-          //EnemyMoves skal lagres skjult
-          const skillItem = document.querySelectorAll("#skills-list .skill");
-          const enemyMoves = enemyData.moves
-            .slice(0, 4)
-            .map((move) => move.move.name);
-          skillItem.forEach((item, index) => {
-            item.textContent = myPokemonMoves[index];
-          });
+                const enemyHP = getHP(enemyData);
+                const myPokemonHP = getHP(myPokemonData);
 
-          skillItem.forEach((item, index) => {
-            item.textContent = myPokemonMoves[index];
-          });
-        } catch (error) {
-          console.error("Feil ved oppdatering av navn på Pokemon"), error;
-        }
-      }
+                document.querySelector("#enemy-name-txt").innerHTML =
+                  randomPokemon[0].name;
+                document.querySelector(
+                  "#enemy-health-txt"
+                ).innerHTML = `HP: ${enemyHP}`;
+                document.querySelector("#my-pokemon-name").innerHTML =
+                  randomPokemon[1].name;
+                document.querySelector(
+                  "#my-pokemon-health-txt"
+                ).innerHTML = `HP: ${myPokemonHP}`;
 
-      async function saveEnemyMoves() {
-        try {
-          const randomPokemon = await fetchRandomPokemon();
-          const enemyData = await fetchRandomPokemonData(randomPokemon[0].id);
-          const enemySkills = enemyData.move
-            .slice(0, 4)
-            .map((move) => move.move.name);
+                //Fetch og display skills (move)
+                //Oppdatere Attack-container med myPokemonMoves
+                const myPokemonMoves = myPokemonData.moves
+                  .slice(0, 4)
+                  .map((move) => move.move.name);
 
-          localStorage.setItem("enemySkills", JSON.stringify(enemySkills));
-        } catch {
-          console.error("Klarte ikke å lagre fiendens skills i localStorage");
-        }
-      }
+                //EnemyMoves skal lagres skjult
+                const skillItem = document.querySelectorAll("#skills-list .skill");
+                const enemyMoves = enemyData.moves
+                  .slice(0, 4)
+                  .map((move) => move.move.name);
+                skillItem.forEach((item, index) => {
+                  item.textContent = myPokemonMoves[index];
+                });
 
-      //hente inn attack-container og skills
-      const myPokemonContainer = document.querySelector(".my-attack-container");
-      const skills = document.querySelector(".skill");
+                skillItem.forEach((item, index) => {
+                  item.textContent = myPokemonMoves[index];
+                });
+              } catch (error) {
+                console.error("Feil ved oppdatering av navn på Pokemon"), error;
+              }
+            }
 
-      //Styling av container
-      myPokemonContainer.style.backgroundColor = "lightGrey";
-      myPokemonContainer.style.border = "5px double Black";
-      myPokemonContainer.style.width = "400px";
-      myPokemonContainer.style.position = "fixed";
-      myPokemonContainer.style.bottom = "0";
+            async function saveEnemyMoves() {
+              try {
+                const randomPokemon = await fetchRandomPokemon();
+                const enemyData = await fetchRandomPokemonData(randomPokemon[0].id);
+                const enemySkills = enemyData.move
+                  .slice(0, 4)
+                  .map((move) => move.move.name);
 
-      //styling tekst inni container
-      const skillsList = document.querySelector("#skills-list");
-      skillsList.style.display = "grid";
-      skillsList.style.gridTemplateColumns = "auto auto";
-      skillsList.style.listStyleType = "none";
+                localStorage.setItem("enemySkills", JSON.stringify(enemySkills));
+              } catch {
+                console.error("Klarte ikke å lagre fiendens skills i localStorage");
+              }
+            }
 
-      showSkills = [];
-      //skills heter "MOVE" i PokeAPI
+            //hente inn attack-container og skills
+            const myPokemonContainer = document.querySelector(".my-attack-container");
+            const skills = document.querySelector(".skill");
 
-      showSkills.forEach((skill) => {
-        skill.addEventListener("click", function () {
-          alert(
-            `${myPokemonId} har angrepet med ${skill}. ${enemyId} har nå ${enemyData}HP igjen!`
-          );
-        });
-      });
+            //Styling av container
+            myPokemonContainer.style.backgroundColor = "lightGrey";
+            myPokemonContainer.style.border = "5px double Black";
+            myPokemonContainer.style.width = "400px";
+            myPokemonContainer.style.position = "fixed";
+            myPokemonContainer.style.bottom = "0";
 
-      showPokemonImages();
-      addPokemonNameData();
-      saveEnemyMoves();
+            //styling tekst inni container
+            const skillsList = document.querySelector("#skills-list");
+            skillsList.style.display = "grid";
+            skillsList.style.gridTemplateColumns = "auto auto";
+            skillsList.style.listStyleType = "none";
+
+            showSkills = [];
+            //skills heter "MOVE" i PokeAPI
+
+            showSkills.forEach((skill) => {
+              skill.addEventListener("click", function () {
+                alert(
+                  `${myPokemonId} har angrepet med ${skill}. ${enemyId} har nå ${enemyData}HP igjen!`
+                );
+              });
+            });
+
+            function myPokemonAttack() {
+              if (myPokemon.currentHP <0) {
+                myPokemon[0,1,2].alive = false;
+                const mySelectedPokemon = document.querySelectorAll(`.img-container .my-pokemon".${myPokemon}`);
+                mySelectedPokemon.remove();
+                alert("Dine Pokémons har ingen HP igjen, spillet er tapt!")
+              }
+            }
+
+            showPokemonImages();
+            addPokemonNameData();
+            saveEnemyMoves();
     </script>
   </body>
 </html>
