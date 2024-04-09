@@ -31,10 +31,10 @@
       <!--Container med min pokemons attacks -->
       <div class="my-attack-container">
         <ul id="skills-list">
-          <li class="skill-1">Skill 1</li>
-          <li class="skill-2">Skill 2</li>
-          <li class="skill-3">Skill 3</li>
-          <li class="skill-4">Skill 4</li>
+          <li class="skill">Skill 1</li>
+          <li class="skill">Skill 2</li>
+          <li class="skill">Skill 3</li>
+          <li class="skill">Skill 4</li>
         </ul>
       </div>
 
@@ -48,9 +48,17 @@
       </div>
     </div>
     <script>
-      const myPokemonContainer = document.querySelector(
-        ".my-attacks-container"
-      );
+      //hente inn attack-container og skills
+      const myPokemonContainer = document.querySelector(".my-attack-container");
+      const skills = document.querySelector(".skill");
+
+      skills.forEach((skill) => {
+        skill.addEventListener("click", function () {
+          alert(
+            `${myPokemonId} har angrepet med ${skill}. ${enemyId} har nå ${enemyData}HP igjen!`
+          );
+        });
+      });
 
       async function fetchRandomPokemon() {
         console.log("Inne i fetchRandomPokemon");
