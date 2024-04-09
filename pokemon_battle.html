@@ -28,6 +28,8 @@
           </div>
         </div>
       </div>
+      <!--Container med min pokemons attacks -->
+      <div class="my-attacks-container"></div>
 
       <!-- Bildenontainere fienden -->
       <div class="enemy-container">
@@ -39,6 +41,10 @@
       </div>
     </div>
     <script>
+      const myPokemonContainer = document.querySelector(
+        ".my-attacks-container"
+      );
+
       async function fetchRandomPokemon() {
         console.log("Inne i fetchRandomPokemon");
         try {
@@ -88,16 +94,16 @@
           const enemyHP = getHP(enemyData);
           const myPokemonHP = getHP(myPokemonData);
 
-          document.getElementById("enemy-name-txt").innerHTML =
+          document.querySelector("#enemy-name-txt").innerHTML =
             randomPokemon[0].name;
-          document.getElementById(
-            "enemy-health-txt"
+          document.querySelector(
+            "#enemy-health-txt"
           ).innerHTML = `HP: ${enemyHP}`;
 
-          document.getElementById("my-pokemon-name").innerHTML =
+          document.querySelector("#my-pokemon-name").innerHTML =
             randomPokemon[1].name;
-          document.getElementById(
-            "my-pokemon-health-txt"
+          document.querySelector(
+            "#my-pokemon-health-txt"
           ).innerHTML = `HP: ${myPokemonHP}`;
         } catch (error) {
           console.error("Feil ved oppdatering av navn på Pokemon"), error;
