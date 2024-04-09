@@ -61,6 +61,17 @@
         }
       }
 
+      async function fetchRandomPokemonType() {
+        try {
+          const pokemonTypeRequest = await fetch(
+            "https://pokeapi.co/api/v2/type"
+          );
+          const pokemonTypesData = await pokemonTypeRequest.json();
+        } catch {
+          console.error("Klarte ikke å hente Pokemontypene");
+        }
+      }
+
       async function addPokemonName() {
         try {
           const randomPokemon = await fetchRandomPokemon();
