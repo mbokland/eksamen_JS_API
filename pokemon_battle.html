@@ -61,13 +61,13 @@
         }
       }
 
-      async function fetchRandomPokemonType(pokemonType) {
+      async function fetchRandomPokemonType(pokemonId) {
         try {
           const pokemonTypeRequest = await fetch(
-            "https://pokeapi.co/api/v2/type/" + pokemonType
+            `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
           );
-          const pokemonTypesData = await pokemonTypeRequest.json();
-          return pokemonTypesData.name;
+          const data = await pokemonTypeRequest.json();
+          return data;
         } catch {
           console.error("Klarte ikke å hente Pokemontypene");
         }
@@ -77,21 +77,31 @@
         try {
           const randomPokemon = await fetchRandomPokemon();
 
-          const enemyType = await fetchRandomPokemonType(
-            randomPokemon[0].types[0].type.name
+          const enemyData = await fetchRandomPokemonType(randomPokemon[0].id);
+
+          const myPokemonData = await fetchRandomPokemonType(
+            randomPokemon[1].id
           );
-          const myPokemonType = await fetchRandomPokemonType(
-            randomPokemon[1].types[0].type.name
-          );
+
+          const getHP = (pokemonData) => {
+            return pokemonData.stats.find((stat) => stat.stat.name === "hp")
+              .base_stat;
+          };
+
+          const enemyHP = getHP(enemyData);
+          const myPokemonHP = getHP(myPokemonData);
 
           document.getElementById("enemy-name-txt").innerHTML =
             randomPokemon[0].name;
-          document.getElementById("enemy-health-txt").innerHTML = enemyType;
+          document.getElementById(
+            "enemy-health-txt"
+          ).innerHTML = `HP: ${enemyHP}`;
 
           document.getElementById("my-pokemon-name").innerHTML =
             randomPokemon[1].name;
-          document.getElementById("my-pokemon-health-txt").innerHTML =
-            myPokemonType;
+          document.getElementById(
+            "my-pokemon-health-txt"
+          ).innerHTML = `HP: ${myPokemonHP}`;
         } catch (error) {
           console.error("Feil ved oppdatering av navn på Pokemon"), error;
         }
