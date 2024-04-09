@@ -13,7 +13,7 @@
           <div class="healthbar enemy-health"></div>
           <div class="text-container">
             <p id="enemy-name-txt">Fiendens navn</p>
-            <p id="enemy-healt-txt"></p>
+            <p id="enemy-health-txt"></p>
           </div>
         </div>
       </div>
@@ -61,12 +61,13 @@
         }
       }
 
-      async function fetchRandomPokemonType() {
+      async function fetchRandomPokemonType(pokemonType) {
         try {
           const pokemonTypeRequest = await fetch(
-            "https://pokeapi.co/api/v2/type"
+            "https://pokeapi.co/api/v2/type/" + pokemonType
           );
           const pokemonTypesData = await pokemonTypeRequest.json();
+          return pokemonTypesData.name;
         } catch {
           console.error("Klarte ikke å hente Pokemontypene");
         }
@@ -75,18 +76,27 @@
       async function addPokemonName() {
         try {
           const randomPokemon = await fetchRandomPokemon();
+
+          const enemyType = await fetchRandomPokemonType(
+            randomPokemon[0].types[0].type.name
+          );
+          const myPokemonType = await fetchRandomPokemonType(
+            randomPokemon[1].types[0].type.name
+          );
+
           document.getElementById("enemy-name-txt").innerHTML =
             randomPokemon[0].name;
+          document.getElementById("enemy-health-txt").innerHTML = enemyType;
+
           document.getElementById("my-pokemon-name").innerHTML =
             randomPokemon[1].name;
-        } catch {
-          console.error("Feil ved oppdatering av navn på Pokemon");
+          document.getElementById("my-pokemon-health-txt").innerHTML =
+            myPokemonType;
+        } catch (error) {
+          console.error("Feil ved oppdatering av navn på Pokemon"), error;
         }
       }
       addPokemonName();
-
-      const enemy = fetchRandomPokemon(3);
-      const myPokemon = fetchRandomPokemon(4);
     </script>
   </body>
 </html>
