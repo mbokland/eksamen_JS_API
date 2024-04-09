@@ -240,6 +240,7 @@
           if (newPokemonName && newPokemonType) {
             selectedPokemon.name = newPokemonName;
             newPokemonType = newPokemonType.toLowerCase();
+
             selectedPokemon.types[0].type.name = newPokemonType;
             const index = savedPokemons.findIndex(
               (p) => p.id === selectedPokemon.id
@@ -252,6 +253,8 @@
               JSON.stringify(savedPokemons)
             );
             displaySavedPokemons();
+          } else if (newPokemonType !== pokemonType.types[0].type.name) {
+            alert(`${newPokemonType} er en ugyldig type!`);
           }
         }
 
