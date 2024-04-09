@@ -39,9 +39,6 @@
       </div>
     </div>
     <script>
-      let enemyArray = [];
-      let myPokemonObject = {};
-
       async function fetchRandomPokemon() {
         console.log("Inne i fetchRandomPokemon");
         try {
@@ -109,9 +106,9 @@
         }
       }
 
-      async function fetchPokemonImg(pokemon) {
+      async function fetchPokemonImg() {
         try {
-          const pokemonId = pokemon.id;
+          const pokemonId = fetchRandomPokemonData().id;
           const pokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
 
           const enemyContainer = document.querySelector(
@@ -131,14 +128,14 @@
       async function showPokemonImages() {
         try {
           const imgCard = document.createElement("img");
-          imgCard.src = pokemonImageUrl;
+          imgCard.src = fetchPokemonImg();
           pokemonCard.appendChild(imgCard);
 
           const randomPokemonFromFetch = await fetchRandomPokemon();
           console.log("inne i showPokemonImages");
           fetchPokemonImg(randomPokemonFromFetch);
-        } catch {
-          console.error("Kunne ikke laste inn bilder");
+        } catch (error) {
+          console.error("Kunne ikke laste inn bilder", error);
         }
       }
 
