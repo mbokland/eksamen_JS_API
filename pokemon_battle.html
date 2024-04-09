@@ -141,10 +141,20 @@
 
           //Fetch og display skills (move)
 
-          const myPokemonMoves = myPokemonData.moves
+          //EnemyMoves skal lagres skjult
+          const enemyMoves = enemyData.moves
             .slice(0, 4)
             .map((move) => move.move.name);
           skillItem.forEach((item, index) => {
+            item.textContent = myPokemonMoves[index];
+          });
+
+          //Oppdatere Attack-container med myPokemonMoves
+          const myPokemonMoves = myPokemonData.moves
+            .slice(0, 4)
+            .map((move) => move.move.name);
+          const skillItem = document.querySelectorAll("#skills-list .skill");
+          skillsItem.forEach((item, index) => {
             item.textContent = myPokemonMoves[index];
           });
         } catch (error) {
