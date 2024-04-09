@@ -13,7 +13,7 @@
           <div class="healthbar enemy-health"></div>
           <div class="text-container">
             <p id="enemy-name-txt">Fiendens navn</p>
-            <p id="enemy-healt-txt">`${}`</p>
+            <p id="enemy-healt-txt"></p>
           </div>
         </div>
       </div>
@@ -24,7 +24,7 @@
           <div class="healthbar my-pokemon-health"></div>
           <div class="text-container">
             <p id="my-pokemon-name"></p>
-            <p id="my-pokemon-health-txt">`${}`</p>
+            <p id="my-pokemon-health-txt"></p>
           </div>
         </div>
       </div>
@@ -36,6 +36,32 @@
       <!-- Bildecontainer for min pokemon-->
       <div class="img-container my-pokemon"></div>
     </div>
-    <script></script>
+    <script>
+      let enemyArray = [];
+      let myPokemonObject = {};
+
+      async function fetchEnemies() {
+        console.log("Inne i fetchEnemies");
+        try {
+          const enemiesRequest = await fetch(
+            "https://pokeapi.co/api/v2/pokemon/?limit=3"
+          );
+          const enemiesResult = await enemiesRequest.json();
+          const enemiesUrls = enemiesResult.results.map(
+            (pokemon) => pokemon.url
+          );
+          const enemiesData = await Promise.all(
+            enemiesUrls.map((url) =>
+              fetch(url).then((response) => response.json())
+            )
+          );
+          console.log("enemiesData:", enemiesData);
+        } catch {
+          console.error("Feil ved innlastning av Fiende!");
+        }
+      }
+
+      fetchEnemies();
+    </script>
   </body>
 </html>
