@@ -115,9 +115,6 @@
             editPokemon(pokemon);
           });
 
-          const createBtn = document.querySelector("#create-btn");
-          createBtn.addEventListener("click", createPokemon);
-
           pokemonCard.appendChild(saveBtn);
           pokemonCard.appendChild(deleteBtn);
           pokemonCard.appendChild(editBtn);
@@ -253,8 +250,6 @@
               JSON.stringify(savedPokemons)
             );
             displaySavedPokemons();
-          } else if (newPokemonType !== pokemonType.types[0].type.name) {
-            alert(`${newPokemonType} er en ugyldig type!`);
           }
         }
 
@@ -265,6 +260,10 @@
         }
 
         //create
+
+        const createBtn = document.querySelector("#create-btn");
+        createBtn.addEventListener("click", createPokemon);
+
         function createFilterBtn(pokemonTypes) {
           const filterBtnContainer = document.getElementById("filter-buttons");
 
@@ -292,7 +291,6 @@
             id: createPokemonId++,
             name: createPokemonName,
             types: [{ type: { name: createPokemonType } }],
-            img: getRandomImg(),
           };
 
           allPokemons.unshift(newPokemon);
@@ -300,10 +298,8 @@
         }
 
         function getRandomImg() {
-          const randomIndex = Math.floor(
-            Math.random() * randomPokemonImg.length
-          );
-          return randomPokemonImg[randomIndex];
+          const randomIndex = Math.floor(Math.random() * allPokemons.length);
+          return createPokemonId[randomIndex];
         }
         /*
               function generateRandomId(pokemonNumber) {
