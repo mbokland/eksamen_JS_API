@@ -66,6 +66,8 @@
           const randomPokemon = await fetchRandomPokemon();
           document.getElementById("enemy-name-txt").innerHTML =
             randomPokemon[0].name;
+          document.getElementById("my-pokemon-name").innerHTML =
+            randomPokemon[1].name;
         } catch {
           console.error("Feil ved oppdatering av navn på Pokemon");
         }
