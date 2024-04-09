@@ -67,59 +67,59 @@
             const pokemonCard = createPokemonCard(pokemon);
             showAllPokemon.appendChild(pokemonCard);
           });
+        }
 
-          function createPokemonCard(pokemon) {
-            //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
-            const pokemonNumber = pokemon.id;
-            //Link til pokeAPIets github med bilderessurser
-            const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
+        function createPokemonCard(pokemon) {
+          //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
+          const pokemonNumber = pokemon.id;
+          //Link til pokeAPIets github med bilderessurser
+          const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
 
-            const pokemonType = pokemon.types[0].type.name;
-            const pokemonColor = typeColors[pokemonType];
+          const pokemonType = pokemon.types[0].type.name;
+          const pokemonColor = typeColors[pokemonType];
 
-            //lager ny div med informasjonen fra APIet
-            //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
-            const pokemonCard = document.createElement("div");
-            pokemonCard.innerHTML = `
+          //lager ny div med informasjonen fra APIet
+          //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
+          const pokemonCard = document.createElement("div");
+          pokemonCard.innerHTML = `
           <p>Navn: ${pokemon.name}</p>
           <p>Type: ${pokemon.types[0].type.name}</p>`;
 
-            pokemonCard.style.backgroundColor = pokemonColor;
+          pokemonCard.style.backgroundColor = pokemonColor;
 
-            //legge til nytt element(bilde)
-            const imgCard = document.createElement("img");
-            imgCard.src = pokemonImageUrl;
-            pokemonCard.appendChild(imgCard);
+          //legge til nytt element(bilde)
+          const imgCard = document.createElement("img");
+          imgCard.src = pokemonImageUrl;
+          pokemonCard.appendChild(imgCard);
 
-            //legge til knapper i pokemonCard
-            const saveBtn = document.createElement("button");
-            saveBtn.textContent = "Lagre";
-            saveBtn.style.width = "50px";
-            saveBtn.addEventListener("click", () => {
-              savePokemon(pokemon);
-              displaySavedPokemons();
-            });
+          //legge til knapper i pokemonCard
+          const saveBtn = document.createElement("button");
+          saveBtn.textContent = "Lagre";
+          saveBtn.style.width = "50px";
+          saveBtn.addEventListener("click", () => {
+            savePokemon(pokemon);
+            displaySavedPokemons();
+          });
 
-            const deleteBtn = document.createElement("button");
-            deleteBtn.textContent = "Slett";
-            deleteBtn.style.width = "50px";
-            deleteBtn.addEventListener("click", () => {
-              deletePokemon(pokemon);
-            });
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Slett";
+          deleteBtn.style.width = "50px";
+          deleteBtn.addEventListener("click", () => {
+            deletePokemon(pokemon);
+          });
 
-            const editBtn = document.createElement("button");
-            editBtn.textContent = "Endre";
-            editBtn.style.width = "50px";
-            editBtn.addEventListener("click", function () {
-              editPokemon(pokemon);
-            });
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Endre";
+          editBtn.style.width = "50px";
+          editBtn.addEventListener("click", function () {
+            editPokemon(pokemon);
+          });
 
-            pokemonCard.appendChild(saveBtn);
-            pokemonCard.appendChild(deleteBtn);
-            pokemonCard.appendChild(editBtn);
+          pokemonCard.appendChild(saveBtn);
+          pokemonCard.appendChild(deleteBtn);
+          pokemonCard.appendChild(editBtn);
 
-            return pokemonCard;
-          }
+          return pokemonCard;
         }
 
         //FILTER
