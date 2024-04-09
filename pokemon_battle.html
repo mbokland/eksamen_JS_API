@@ -61,25 +61,25 @@
         }
       }
 
-      async function fetchRandomPokemonType(pokemonId) {
+      async function fetchRandomPokemonData(pokemonId) {
         try {
-          const pokemonTypeRequest = await fetch(
+          const pokemonDataRequest = await fetch(
             `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
           );
-          const data = await pokemonTypeRequest.json();
+          const data = await pokemonDataRequest.json();
           return data;
         } catch {
-          console.error("Klarte ikke å hente Pokemontypene");
+          console.error("Klarte ikke å hente Pokemons HP");
         }
       }
 
-      async function addPokemonNameType() {
+      async function addPokemonNameData() {
         try {
           const randomPokemon = await fetchRandomPokemon();
 
-          const enemyData = await fetchRandomPokemonType(randomPokemon[0].id);
+          const enemyData = await fetchRandomPokemonData(randomPokemon[0].id);
 
-          const myPokemonData = await fetchRandomPokemonType(
+          const myPokemonData = await fetchRandomPokemonData(
             randomPokemon[1].id
           );
 
@@ -106,7 +106,7 @@
           console.error("Feil ved oppdatering av navn på Pokemon"), error;
         }
       }
-      addPokemonNameType();
+      addPokemonNameData();
     </script>
   </body>
 </html>
