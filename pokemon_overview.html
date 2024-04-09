@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eksamen i Javascript og API</title>
+  </head>
+  <body>
+    <h1>Pokemonoversikt</h1>
+
+    <button id="clear-filter">Fjern filter</button>
+    <div id="filter-buttons"></div>
+    <h2>Lag din egen Pokémon!</h2>
+    <input
+      type="text"
+      placeholder="Skriv inn navn på din nye Pokémon"
+      id="create-pokemon-name"
+    />
+    <input
+      type="text"
+      placeholder="Skriv inn Pokémonens' nye type"
+      id="create-pokemon-type"
+    />
+    <input type="button" value="Lag ny Pokémon!" id="create-btn" />
+    <div id="create-pokemon"></div>
+    <div id="show-all-pokemon"></div>
+    <div id="pokemon-container"></div>
+    <div id="saved-pokemon-card"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        //Her hentes div ifra HTML
+        const showAllPokemon = document.querySelector("#show-all-pokemon");
+        const createPokemonName = document.querySelector(
+          "#create-pokemon-name"
+        );
+
+        let allPokemons = []; //Array til å lagre fetchet pokemons!! viktig
+        let savedPokemons = [];
+        let createPokemonId = 400; //Tildeler ny id til nye Pokémons
+
+        //Fetcher APIet's pokemon (etter anvist i dokumentasjonen)
+        async function fetchPokemon() {
+          try {
+            const pokemonRequest = await fetch(
+              "https://pokeapi.co/api/v2/pokemon/?limit=50"
+            );
+
+            const result = await pokemonRequest.json();
+            const pokemonUrls = result.results.map((pokemon) => pokemon.url);
+            const pokemonData = await Promise.all(
+              pokemonUrls.map((url) =>
+                fetch(url).then((response) => response.json())
+              )
+            );
+            allPokemons = pokemonData;
+            displayPokemons(allPokemons);
+            fetchPokemonTypes();
+          } catch {
+            console.error("Oisann! Klarte ikke å laste inn Pokémon!");
+          }
+        }
+
+        function displayPokemons(pokemons) {
+          showAllPokemon.innerHTML = "";
+          pokemons.forEach((pokemon) => {
+            const pokemonCard = createPokemonCard(pokemon);
+            showAllPokemon.appendChild(pokemonCard);
+          });
+        }
+
+        function createPokemonCard(pokemon) {
+          //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
+          const pokemonNumber = pokemon.id;
+          //Link til pokeAPIets github med bilderessurser
+          const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
+
+          const pokemonType = pokemon.types[0].type.name;
+          const pokemonColor = typeColors[pokemonType];
+
+          //lager ny div med informasjonen fra APIet
+          //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
+          const pokemonCard = document.createElement("div");
+          pokemonCard.innerHTML = `
+          <p>Navn: ${pokemon.name}</p>
+          <p>Type: ${pokemon.types[0].type.name}</p>`;
+
+          pokemonCard.style.backgroundColor = pokemonColor;
+
+          //legge til nytt element(bilde)
+          const imgCard = document.createElement("img");
+          imgCard.src = pokemonImageUrl;
+          pokemonCard.appendChild(imgCard);
+
+          //legge til knapper i pokemonCard
+          const saveBtn = document.createElement("button");
+          saveBtn.textContent = "Lagre";
+          saveBtn.style.width = "50px";
+          saveBtn.addEventListener("click", () => {
+            savePokemon(pokemon);
+            displaySavedPokemons();
+          });
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Slett";
+          deleteBtn.style.width = "50px";
+          deleteBtn.addEventListener("click", () => {
+            deletePokemon(pokemon);
+          });
+
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Endre";
+          editBtn.style.width = "50px";
+          editBtn.addEventListener("click", function () {
+            editPokemon(pokemon);
+          });
+
+          pokemonCard.appendChild(saveBtn);
+          pokemonCard.appendChild(deleteBtn);
+          pokemonCard.appendChild(editBtn);
+
+          return pokemonCard;
+        }
+
+        //FILTER
+
+        let allPokemonTypes = [];
+        const typeColors = {
+          normal: `#E4BFC9`,
+          fighting: `#EF9E87`,
+          flying: `#91AFC3`,
+          poison: `#8C76A2`,
+          ground: `#DDBD95`,
+          rock: `#7D5047`,
+          bug: `#7DAB89`,
+          ghost: `#B897B8`,
+          steel: `#97DFC7`,
+          fire: `#FA8791`,
+          water: `#7F9FE8`,
+          grass: `#93BBA0`,
+          electric: `#F8F8B4`,
+          psycich: `#E88CBE`,
+          ice: `#E7F5FD`,
+          dragon: `#A5CDD4`,
+          dark: `#A2A2A3`,
+          fairy: `#EBACC5`,
+        };
+
+        async function fetchPokemonTypes() {
+          try {
+            const fetchTypesRequest = await fetch(
+              "https://pokeapi.co/api/v2/type"
+            );
+            const pokemonTypeData = await fetchTypesRequest.json();
+            allPokemonTypes = pokemonTypeData.results.slice(0, 18);
+            createFilterBtn(allPokemonTypes);
+          } catch (error) {
+            console.error("Feil ved lasting av type Pokemon", error);
+          }
+        }
+
+        async function fetchPokemonByType(typeName) {
+          const filteredPokemons = allPokemons.filter((pokemon) => {
+            return pokemon.types[0].type.name === typeName;
+          });
+
+          displayPokemons(filteredPokemons);
+        }
+
+        const clearFilterBtn = document.getElementById("clear-filter");
+        clearFilterBtn.addEventListener("click", () => {
+          showAllPokemon.innerHTML = "";
+          fetchPokemon();
+        });
+
+        async function savePokemon(pokemon) {
+          try {
+            savedPokemons =
+              JSON.parse(localStorage.getItem("savedPokemons")) || [];
+            if (savedPokemons.length < 5) {
+              savedPokemons.push(pokemon);
+              localStorage.setItem(
+                "savedPokemons",
+                JSON.stringify(savedPokemons)
+              );
+              await displaySavedPokemons();
+            } else {
+              alert(
+                "Du kan ikke lagre flere Pokemon! Vennligst slett en Pokemon for å fotsette"
+              );
+            }
+          } catch {
+            console.error("Klarte ikke å lagre denne Pokemon!");
+          }
+        }
+
+        function displaySavedPokemons() {
+          const savedPokemonContainer =
+            document.getElementById("saved-pokemon-card");
+          savedPokemonContainer.innerHTML = "";
+
+          const savedPokemonHeader = document.createElement("h3");
+          savedPokemonHeader.textContent = "Mine lagrede Pokémons:";
+          savedPokemonContainer.appendChild(savedPokemonHeader);
+
+          const savedPokemons =
+            JSON.parse(localStorage.getItem("savedPokemons")) || [];
+
+          savedPokemons.forEach((pokemon, index) => {
+            const savedPokemonCard = createPokemonCard(pokemon, index);
+            savedPokemonContainer.appendChild(savedPokemonCard);
+          });
+        }
+
+        function deletePokemon(pokemon) {
+          const confirmDelete = confirm(
+            `Er du sikker på at du vil slette ${pokemon.name}?`
+          );
+          if (confirmDelete) {
+            const index = savedPokemons.findIndex((p) => p.id === pokemon.id);
+            if (index !== -1) {
+              savedPokemons.splice(index, 1);
+              localStorage.setItem(
+                "savedPokemons",
+                JSON.stringify(savedPokemons)
+              );
+
+              displaySavedPokemons();
+            }
+          }
+        }
+
+        function editPokemon(selectedPokemon) {
+          const newPokemonName = prompt("Skriv inn det nye navnet:");
+          let newPokemonType = prompt("Skriv inn hvilken type den skal ha:");
+
+          if (newPokemonName && newPokemonType) {
+            selectedPokemon.name = newPokemonName;
+            newPokemonType = newPokemonType.toLowerCase();
+
+            selectedPokemon.types[0].type.name = newPokemonType;
+            displayPokemons(allPokemons);
+
+            const savedIndex = savedPokemons.findIndex(
+              (p) => p.id === selectedPokemon.id
+            );
+            if (savedIndex !== -1) {
+              savedPokemons[index] = selectedPokemon;
+
+              localStorage.setItem(
+                "savedPokemons",
+                JSON.stringify(savedPokemons)
+              );
+            }
+          }
+        }
+
+        function loadSavedPokemons() {
+          savedPokemons =
+            JSON.parse(localStorage.getItem("savedPokemons")) || [];
+          displaySavedPokemons();
+        }
+
+        //create
+
+        const createBtn = document.querySelector("#create-btn");
+        createBtn.addEventListener("click", createPokemon);
+
+        function createFilterBtn(pokemonTypes) {
+          const filterBtnContainer = document.getElementById("filter-buttons");
+
+          filterBtnContainer.innerHTML = ""; //Tømmer btn-container, så ikke knappene dobler seg
+
+          pokemonTypes.forEach((type) => {
+            const pokemonTypeBtn = document.createElement("button");
+            pokemonTypeBtn.textContent = type.name;
+            pokemonTypeBtn.addEventListener("click", () => {
+              fetchPokemonByType(type.name);
+            });
+            filterBtnContainer.appendChild(pokemonTypeBtn);
+          });
+        }
+
+        function createPokemon() {
+          const createPokemonName = document.querySelector(
+            "#create-pokemon-name"
+          ).value;
+          const createPokemonType = document.querySelector(
+            "#create-pokemon-type"
+          ).value;
+
+          const newPokemon = {
+            id: createPokemonId++,
+            name: createPokemonName,
+            types: [{ type: { name: createPokemonType } }],
+          };
+
+          allPokemons.unshift(newPokemon);
+          displayPokemons(allPokemons);
+
+          savedPokemons.push(newPokemon);
+          localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons)); //Lagre ny pokemon i localstorage
+        }
+
+        function getRandomImg() {
+          const randomIndex = Math.floor(Math.random() * allPokemons.length);
+          return createPokemonId[randomIndex];
+        }
+        /*
+              function generateRandomId(pokemonNumber) {
+                const randomNumber = Math.floor(Math.random() * 500);
+                if (randomNumber !== pokemonNumber) {
+                  return randomNumber;
+                } else {
+                  return generateRandomId(pokemonNumber);
+                }
+              }*/
+
+        fetchPokemon();
+        loadSavedPokemons();
+      });
+    </script>
+  </body>
+</html>
