@@ -140,8 +140,13 @@
           ).innerHTML = `HP: ${myPokemonHP}`;
 
           //Fetch og display skills (move)
+          //Oppdatere Attack-container med myPokemonMoves
+          const myPokemonMoves = myPokemonData.moves
+            .slice(0, 4)
+            .map((move) => move.move.name);
 
           //EnemyMoves skal lagres skjult
+          const skillItem = document.querySelectorAll("#skills-list .skill");
           const enemyMoves = enemyData.moves
             .slice(0, 4)
             .map((move) => move.move.name);
@@ -149,16 +154,25 @@
             item.textContent = myPokemonMoves[index];
           });
 
-          //Oppdatere Attack-container med myPokemonMoves
-          const myPokemonMoves = myPokemonData.moves
-            .slice(0, 4)
-            .map((move) => move.move.name);
-          const skillItem = document.querySelectorAll("#skills-list .skill");
-          skillsItem.forEach((item, index) => {
+          skillItem.forEach((item, index) => {
             item.textContent = myPokemonMoves[index];
           });
         } catch (error) {
           console.error("Feil ved oppdatering av navn på Pokemon"), error;
+        }
+      }
+
+      async function saveEnemyMoves() {
+        try {
+          const randomPokemon = await fetchRandomPokemon();
+          const enemyData = await fetchRandomPokemonData(randomPokemon[0].id);
+          const enemySkills = enemyData.move
+            .slice(0, 4)
+            .map((move) => move.move.name);
+
+          localStorage.setItem("enemySkills", JSON.stringify(enemySkills));
+        } catch {
+          console.error("Klarte ikke å lagre fiendens skills i localStorage");
         }
       }
 
@@ -179,6 +193,7 @@
 
       showPokemonImages();
       addPokemonNameData();
+      saveEnemyMoves();
     </script>
   </body>
 </html>
