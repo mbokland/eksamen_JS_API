@@ -180,6 +180,19 @@
       const myPokemonContainer = document.querySelector(".my-attack-container");
       const skills = document.querySelector(".skill");
 
+      //Styling av container
+      myPokemonContainer.style.backgroundColor = "lightGrey";
+      myPokemonContainer.style.border = "5px double Black";
+      myPokemonContainer.style.width = "400px";
+      myPokemonContainer.style.position = "fixed";
+      myPokemonContainer.style.bottom = "0";
+
+      //styling tekst inni container
+      const skillsList = document.querySelector("#skills-list");
+      skillsList.style.display = "grid";
+      skillsList.style.gridTemplateColumns = "auto auto";
+      skillsList.style.listStyleType = "none";
+
       showSkills = [];
       //skills heter "MOVE" i PokeAPI
 
