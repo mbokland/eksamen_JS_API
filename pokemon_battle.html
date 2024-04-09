@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOC html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -34,7 +34,9 @@
         <div class="img-container enemy"></div>
       </div>
       <!-- Bildecontainer for min pokemon-->
-      <div class="img-container my-pokemon"></div>
+      <div class="my-pokemon-container">
+        <div class="img-container my-pokemon"></div>
+      </div>
     </div>
     <script>
       let enemyArray = [];
@@ -106,6 +108,41 @@
           console.error("Feil ved oppdatering av navn på Pokemon"), error;
         }
       }
+
+      async function fetchPokemonImg(pokemon) {
+        try {
+          const pokemonId = pokemon.id;
+          const pokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`;
+
+          const enemyContainer = document.querySelector(
+            ".enemy-container .img-container.enemy"
+          );
+          enemyContainer.innerHTML = `<img src="${pokemonImgUrl}" alt="Fiendens bilde">`;
+
+          const myPokemonContainer = document.querySelector(
+            ".my-pokemon-container .img-container"
+          );
+          myPokemonContainer.innerHTML = `<img src="${pokemonImgUrl}" alt="Din Pokemons bilde">`;
+        } catch (error) {
+          console.error("Feil ved lasting av bilde", error);
+        }
+      }
+
+      async function showPokemonImages() {
+        try {
+          const imgCard = document.createElement("img");
+          imgCard.src = pokemonImageUrl;
+          pokemonCard.appendChild(imgCard);
+
+          const randomPokemonFromFetch = await fetchRandomPokemon();
+          console.log("inne i showPokemonImages");
+          fetchPokemonImg(randomPokemonFromFetch);
+        } catch {
+          console.error("Kunne ikke laste inn bilder");
+        }
+      }
+
+      showPokemonImages();
       addPokemonNameData();
     </script>
   </body>
