@@ -23,7 +23,7 @@
         <div class="healthbar-container">
           <div class="healthbar my-pokemon-health"></div>
           <div class="text-container">
-            <p id="my-pokemon-name"></p>
+            <p id="my-pokemon-name">Min pokemons navn</p>
             <p id="my-pokemon-health-txt"></p>
           </div>
         </div>
@@ -43,39 +43,50 @@
       async function fetchRandomPokemon() {
         console.log("Inne i fetchRandomPokemon");
         try {
-          const randomPokemon = [];
+          const randomPokemonData = [];
           for (let i = 0; i < 3; i++) {
             const randomPokemonId = Math.floor(Math.random() * 400) + 1;
             const randomPokemonRequest = await fetch(
               "https://pokeapi.co/api/v2/pokemon/" + randomPokemonId
             );
-            const randomPokemonData = await randomPokemonRequest.json();
-            randomPokemon.push(randomPokemonData);
+            const randomPokemon = await randomPokemonRequest.json();
+            randomPokemonData.push(randomPokemon);
           }
 
-          return randomPokemon;
+          return randomPokemonData;
 
-          console.log("fetchRandomPokemon:", randomPokemon);
-        } catch {
-          console.error("Feil ved innlastning av Random Pokemon!");
+          console.log("fetchRandomPokemon:", randomPokemonData);
+        } catch (error) {
+          console.error("Feil ved innlastning av Random Pokemon!"), error;
         }
       }
 
       async function addPokemonName() {
         try {
-          const randomPokemon = await fetchRandomPokemon();
+          const randomPokemonData = await fetchRandomPokemon();
+          //Fiendens navn og type
           document.getElementById("enemy-name-txt").innerHTML =
-            randomPokemon[0].name;
+            randomPokemonData[0].name;
+          /*document.getElementById("enemy-healt-txt").innerHTML =
+            pokemonType[0].type;*/
+          //min pokemons navn og type
           document.getElementById("my-pokemon-name").innerHTML =
-            randomPokemon[1].name;
+            randomPokemonData[1].name;
+          /*document.getElementById("my-healt-txt").innerHTML =
+            pokemonType[1].type;*/
+
+          const enemyName = await fetchRandomPokemon[randomPokemonData[0].name];
+          const mypokemonName = await fetchRandomPokemon[
+            randomPokemonData[1].name
+          ];
         } catch {
           console.error("Feil ved oppdatering av navn på Pokemon");
         }
       }
       addPokemonName();
 
-      const enemy = fetchRandomPokemon(3);
-      const myPokemon = fetchRandomPokemon(4);
+      const enemy = fetchRandomPokemonName(3);
+      const myPokemon = fetchRandomPokemonName(4);
     </script>
   </body>
 </html>
