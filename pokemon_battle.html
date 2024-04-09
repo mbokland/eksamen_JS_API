@@ -43,19 +43,17 @@
       async function fetchEnemies() {
         console.log("Inne i fetchEnemies");
         try {
-          const enemiesRequest = await fetch(
-            "https://pokeapi.co/api/v2/pokemon/?limit=3"
-          );
-          const enemiesResult = await enemiesRequest.json();
-          const enemiesUrls = enemiesResult.results.map(
-            (pokemon) => pokemon.url
-          );
-          const enemiesData = await Promise.all(
-            enemiesUrls.map((url) =>
-              fetch(url).then((response) => response.json())
-            )
-          );
-          console.log("enemiesData:", enemiesData);
+          const randomEnemies = [];
+          for (let i = 0; i < 3; i++) {
+            const randomEnemyId = Math.floor(Math.random() * 400) + 1;
+            const randomEnemyRequest = await fetch(
+              "https://pokeapi.co/api/v2/pokemon/" + randomEnemyId
+            );
+            const randomEnemiesData = await randomEnemyRequest.json();
+            randomEnemies.push(randomEnemiesData);
+          }
+
+          console.log("randomEnemies:", randomEnemies);
         } catch {
           console.error("Feil ved innlastning av Fiende!");
         }
