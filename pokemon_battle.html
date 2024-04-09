@@ -40,26 +40,26 @@
       let enemyArray = [];
       let myPokemonObject = {};
 
-      async function fetchEnemies() {
-        console.log("Inne i fetchEnemies");
+      async function fetchRandomPokemon() {
+        console.log("Inne i fetchRandomPokemon");
         try {
-          const randomEnemies = [];
+          const randomPokemon = [];
           for (let i = 0; i < 3; i++) {
-            const randomEnemyId = Math.floor(Math.random() * 400) + 1;
-            const randomEnemyRequest = await fetch(
-              "https://pokeapi.co/api/v2/pokemon/" + randomEnemyId
+            const randomPokemonId = Math.floor(Math.random() * 400) + 1;
+            const randomPokemonRequest = await fetch(
+              "https://pokeapi.co/api/v2/pokemon/" + randomPokemonId
             );
-            const randomEnemiesData = await randomEnemyRequest.json();
-            randomEnemies.push(randomEnemiesData);
+            const randomPokemonData = await randomPokemonRequest.json();
+            randomPokemon.push(randomPokemonData);
           }
 
-          console.log("randomEnemies:", randomEnemies);
+          console.log("fetchRandomPokemon:", randomPokemon);
         } catch {
-          console.error("Feil ved innlastning av Fiende!");
+          console.error("Feil ved innlastning av Random Pokemon!");
         }
       }
 
-      fetchEnemies();
+      fetchRandomPokemon();
     </script>
   </body>
 </html>
