@@ -295,6 +295,9 @@
 
           allPokemons.unshift(newPokemon);
           displayPokemons(allPokemons);
+
+          savedPokemons.push(newPokemon);
+          localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons)); //Lagre ny pokemon i localstorage
         }
 
         function getRandomImg() {
