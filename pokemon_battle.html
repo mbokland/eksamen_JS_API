@@ -350,12 +350,21 @@
       //STARTER SPILLET
       const moveBtn = document.querySelectorAll(".skill");
 
+      function generateRandomDamage(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
       moveBtn.forEach((skill) => {
         skill.addEventListener("click", async function () {
           // kode som lager angrep - hente stats
-          const getStats = await fetchStatsFromApi(pokemonId);
+
           const selectedSkill = skill.textContent;
+
           console.log("Skill-elementet ble klikket på:", skill.textContent);
+
+          const damage = generateRandomDamage(-10, 20);
+
+          console.log(`${selectedSkill} forårsaker ${damage} HP skade.`);
         });
       });
 
