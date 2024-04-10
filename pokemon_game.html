@@ -138,7 +138,6 @@
           pokemonCard.appendChild(deleteBtn);
           pokemonCard.appendChild(editBtn);
 
-          const allBtn = (saveBtn, editBtn, deleteBtn);
           return pokemonCard;
         }
 
@@ -267,7 +266,7 @@
               (p) => p.id === selectedPokemon.id
             );
             if (savedIndex !== -1) {
-              savedPokemons[index] = selectedPokemon;
+              savedPokemons[savedIndex] = selectedPokemon;
 
               localStorage.setItem(
                 "savedPokemons",
