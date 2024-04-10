@@ -130,6 +130,18 @@
         }
       }
 
+      async function fetchBerries() {
+        try {
+          const fetchBerriesRequest = await fetch(
+            `https://pokeapi.co/api/v2/berry/`
+          );
+          const berry = await fetchBerriesRequest.json();
+          return berry;
+        } catch (error) {
+          console.error("klarte ikke fetche berry", error);
+        }
+      }
+
       async function showPokemonImages() {
         try {
           await fetchPokemonImg();
@@ -231,17 +243,20 @@
             .map((move) => move.move.name);
 
           //EnemyMoves skal lagres skjult
-          const skillItem = document.querySelectorAll("#skills-list .skill");
+          const skillItems = document.querySelectorAll("#skills-list .skill");
           const enemyMoves = enemyData.moves
             .slice(0, 4)
             .map((move) => move.move.name);
-          skillItem.forEach((item, index) => {
+
+          skillItems.forEach((item, index) => {
             item.textContent = myPokemonMoves[index];
           });
 
-          skillItem.forEach((item, index) => {
-            item.textContent = myPokemonMoves[index];
-          });
+          const berryData = await fetchBerries();
+          if (berryData && berryData.results && berryData.results.length > 0) {
+            const berryName = berryData.results[0].name;
+            skillItems[3].textContent = berryName;
+          }
 
           return { enemyHP, myPokemonHP };
         } catch (error) {
