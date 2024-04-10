@@ -173,13 +173,14 @@
         try {
           const randomPokemon = await fetchRandomPokemon();
           const enemyData = await fetchRandomPokemonData(randomPokemon[0].id);
-          const enemySkills =
-            enemyData.moves && enemyData.moves.length > 0
-              ? enemyData.moves.slice(0, 4).map((move) => move.move.name)
-              : sessionStorage.setItem(
-                  "enemySkills",
-                  JSON.stringify(enemySkills)
-                );
+
+          if (enemyData.moves && enemyData.moves.length > 0) {
+            const enemySkills = enemyData.moves
+              .slice(0, 4)
+              .map((move) => move.move.name);
+
+            sessionStorage.setItem("enemySkills", JSON.stringify(enemySkills));
+          }
         } catch (error) {
           console.error(
             "Klarte ikke å lagre fiendens skills i sessionStorage",
