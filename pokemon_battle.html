@@ -58,6 +58,8 @@
 
       let myPokemonsArray = [];
 
+      let pokemonId;
+
       async function fetchRandomPokemon() {
         console.log("Inne i fetchRandomPokemon");
         try {
@@ -114,10 +116,10 @@
         }
       }
 
-      async function fetchStatsFromApi() {
+      async function fetchStatsFromApi(pokemonId) {
         try {
           const pokemonStatsDataRequest = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
+            `https://pokeapi.co/api/v2/stat/`
           );
           const stats = await pokemonStatsDataRequest.json();
 
@@ -345,12 +347,15 @@
           alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
         }
       }
-
+      //STARTER SPILLET
       const moveBtn = document.querySelectorAll(".skill");
 
       moveBtn.forEach((skill) => {
-        skill.addEventListener("click", function () {
+        skill.addEventListener("click", async function () {
           // kode som lager angrep - hente stats
+          const getStats = await fetchStatsFromApi(pokemonId);
+          const selectedSkill = skill.textContent;
+          console.log("Skill-elementet ble klikket på:", skill.textContent);
         });
       });
 
