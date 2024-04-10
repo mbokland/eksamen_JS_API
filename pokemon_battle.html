@@ -396,10 +396,10 @@
       });
 
       function myPokemonAttack() {
-        if (parseInt(myPokemon.currentHP) < 0) {
+        if (parseInt(myPokemon.currentHP) <= 0) {
           myPokemon.alive = false;
           const mySelectedPokemon = document.querySelectorAll(
-            `.img-container .my-pokemon".${myPokemon.id}`
+            `.img-container .my-pokemon`
           );
           mySelectedPokemon.remove();
           alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
@@ -423,12 +423,12 @@
       }
 
       function enemyAttack() {
-        if (parseInt(enemy.currentHP) < 0) {
+        if (parseInt(enemy.currentHP) <= 0) {
           enemy.alive = false;
           const selectedEnemy = document.querySelectorAll(
-            `.img-container .enemy".${enemy.id}`
+            `.img-container .enemy`
           );
-          if (selectedEnemy.lengt > 0) {
+          if (selectedEnemy.length > 0) {
             selectedEnemy.forEach((pokemon) => pokemon.remove());
           }
           alert(`Dine Pokémons har ingen HP igjen, spillet er tapt!`);
