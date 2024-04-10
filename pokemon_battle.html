@@ -346,6 +346,14 @@
         }
       }
 
+      const moveBtn = document.querySelectorAll(".skill");
+
+      moveBtn.forEach((skill) => {
+        skill.addEventListener("click", function () {
+          // kode som lager angrep - hente stats
+        });
+      });
+
       showPokemonImages();
       addPokemonNameData();
       saveEnemyMoves();
