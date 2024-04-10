@@ -360,23 +360,28 @@
 
           const selectedSkill = skill.textContent;
           const damage = generateRandomDamage(5, 20);
+          const enemyImg = document.querySelector(".img-container.enemy img");
 
           counterAttack();
 
           console.log("Skill-elementet ble klikket på:", skill.textContent);
 
-          if (selectedSkill !== "skill 4") {
-            enemy.currentHP -= damage;
+          if (enemy.currentHP <= 0) {
+            if (selectedSkill !== "skill 4") {
+              enemy.currentHP -= damage;
 
-            console.log(`${selectedSkill} forårsaker ${damage} HP skade.`);
+              console.log(`${selectedSkill} forårsaker ${damage} HP skade.`);
 
-            document.querySelector(
-              "#enemy-health-txt"
-            ).textContent = `HP: ${enemy.currentHP}`;
+              document.querySelector(
+                "#enemy-health-txt"
+              ).textContent = `HP: ${enemy.currentHP}`;
+            } else {
+              useCherry();
+            }
+            myPokemonAttack();
           } else {
-            useCherry();
+            enemyImg.remove();
           }
-          myPokemonAttack();
         });
 
         function useCherry() {
