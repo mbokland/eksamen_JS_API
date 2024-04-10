@@ -59,6 +59,7 @@
       let myPokemonsArray = [];
 
       let pokemonId;
+      let enemy;
 
       async function fetchRandomPokemon() {
         console.log("Inne i fetchRandomPokemon");
@@ -309,25 +310,19 @@
           const enemyData = randomPokemon[0]; //skiller mellom fiende og mine pokemons
           const myPokemonData = randomPokemon[1];
 
-          for (let i = 0; i < 3; i++) {
-            const enemy = {
-              id: enemyData.id,
-              name: enemyData.name,
-              maxHP: enemyHP,
-              /*currentHP: ememyCurrentHp,
-              damage: skillItem.id, //Denne må ha en funksjon/fetch først*/
-              alive: true,
-            };
+          enemy = {
+            id: enemyData.id,
+            name: enemyData.name,
+            maxHP: enemyHP,
+            alive: true,
+          };
 
-            enemiesArray.push(enemy);
-          }
+          enemiesArray.push(enemy);
 
-          const myPokemon = {
+          myPokemon = {
             id: myPokemonData.id,
             name: myPokemonData.name,
             maxHP: myPokemonHP,
-            /*currentHP: myPokemonCurrentHP,
-              damage: skillItem.id, //Denne må ha en funksjon/fetch først*/
             alive: true,
           };
 
@@ -347,6 +342,18 @@
           alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
         }
       }
+
+      function enemyAttack() {
+        if (enemy.currentHP < 0) {
+          myPokemon[(0, 1, 2)].alive = false;
+          const selectedEnemy = document.querySelectorAll(
+            `.img-container .enemy".${enemy.id}`
+          );
+          selectedEnemy.remove();
+          alert(`${myPokemon.name} har slått ut ${enemy.name}`);
+        }
+      }
+
       //STARTER SPILLET
       const moveBtn = document.querySelectorAll(".skill");
 
@@ -365,6 +372,10 @@
           const damage = generateRandomDamage(-10, 20);
 
           console.log(`${selectedSkill} forårsaker ${damage} HP skade.`);
+
+          document.querySelector(
+            "#enemy-health-txt"
+          ).textContent = `HP: ${enemy.currentHP}`;
         });
       });
 
