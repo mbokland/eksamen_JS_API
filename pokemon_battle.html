@@ -6,6 +6,11 @@
     <title>Document</title>
   </head>
   <body>
+    <img
+      src="/assets/bakgrunnsbilde.jpg"
+      alt="bakgrunnsbilde"
+      style="position: fixed; top: 0; left: 0; width: 100%"
+    />
     <div class="main-container">
       <!--FIENDE-->
       <div class="enemy-health-container">
@@ -139,6 +144,70 @@
             "#my-pokemon-health-txt"
           ).innerHTML = `HP: ${myPokemonHP}`;
 
+          //hente inn containers til styling
+          const enemyHealthContainer = document.querySelector(
+            ".enemy-health-container"
+          );
+          const myPokemonHealtContainer = document.querySelector(
+            ".my-pokemon-health-container"
+          );
+          const enemyContainer = document.querySelector(".enemy-container");
+          const myPokemonContainer = document.querySelector(
+            ".my-pokemon-container"
+          );
+          const healthBarTxt = document.querySelectorAll(".text-container");
+
+          const healthbarContainers = document.querySelectorAll(
+            ".healthbar-container"
+          );
+
+          const enemyImg = document.querySelector(".img-container.enemy img");
+          const myPokemonImg = document.querySelector(
+            ".img-container.my-pokemon img"
+          );
+
+          //style health-bars
+          healthBarTxt.forEach((container) => {
+            container.style.color = "green";
+            container.style.display = "flex";
+            container.style.alignItems = "center";
+            container.style.justifyContent = "space-between";
+            container.style.margin = "7px";
+          });
+
+          //style begge containers
+          healthbarContainers.forEach((container) => {
+            container.style.width = "250px";
+            container.style.height = "60px";
+            container.style.border = "2px solid black";
+          });
+
+          //fiende
+          enemyHealthContainer.style.backgroundColor = "lightgreen";
+          enemyHealthContainer.style.position = "fixed";
+          enemyHealthContainer.style.left = "50px";
+
+          //myPokemon
+          myPokemonHealtContainer.style.backgroundColor = "pink";
+          myPokemonHealtContainer.style.position = "fixed";
+          myPokemonHealtContainer.style.right = "50px";
+          myPokemonHealtContainer.style.bottom = "150px";
+
+          //style fiendens bildecontainer
+          enemyContainer.style.position = "fixed";
+          enemyContainer.style.top = "20px";
+          enemyContainer.style.right = "100px";
+          enemyContainer.style.width = " 300px";
+
+          //style bildestørrelse
+          enemyImg.style.width = "150px";
+          myPokemonImg.style.width = "350px";
+
+          //style myPokemons bildecontainer
+          myPokemonContainer.style.position = "fixed";
+          myPokemonContainer.style.bottom = "100px";
+          myPokemonContainer.style.left = "100px";
+
           //Fetch og display skills (move)
           //Oppdatere Attack-container med myPokemonMoves
           const myPokemonMoves = myPokemonData.moves
@@ -168,7 +237,7 @@
       const myPokemonContainer = document.querySelector(".my-attack-container");
       const skills = document.querySelector(".skill");
 
-      //Styling av container
+      //Styling av attack-container
       myPokemonContainer.style.backgroundColor = "lightGrey";
       myPokemonContainer.style.border = "5px double Black";
       myPokemonContainer.style.width = "400px";
