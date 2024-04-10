@@ -114,6 +114,12 @@
         }
       }
 
+      async function fetchStatsFromApi() {
+        try {
+        } catch (error) {
+          console.error("Klarte ikke hente stats fra API", error);
+        }
+      }
       async function showPokemonImages() {
         try {
           await fetchPokemonImg();
