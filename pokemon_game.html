@@ -85,17 +85,36 @@
           <p>Navn: ${pokemon.name}</p>
           <p>Type: ${pokemon.types[0].type.name}</p>`;
 
+          //Style card
           pokemonCard.style.backgroundColor = pokemonColor;
+          pokemonCard.style.border = "1px solid black";
+          pokemonCard.style.margin = "5px";
+          pokemonCard.style.width = "170px";
+
+          const showAllPokemon = document.querySelector("#show-all-pokemon");
+          const savedPokemonContainer = document.querySelector(
+            "#saved-pokemon-card"
+          );
+
+          showAllPokemon.style.display = "flex";
+          showAllPokemon.style.flexWrap = "wrap";
+
+          savedPokemonContainer.style.display = "flex";
+          savedPokemonContainer.style.flexWrap = "wrap";
 
           //legge til nytt element(bilde)
           const imgCard = document.createElement("img");
           imgCard.src = pokemonImageUrl;
           pokemonCard.appendChild(imgCard);
 
+          //style bilde
+          imgCard.style.width = "140px";
+          imgCard.style.width = "100%";
+
           //legge til knapper i pokemonCard
           const saveBtn = document.createElement("button");
           saveBtn.textContent = "Lagre";
-          saveBtn.style.width = "50px";
+          saveBtn.style.width = "33%";
           saveBtn.addEventListener("click", () => {
             savePokemon(pokemon);
             displaySavedPokemons();
@@ -103,14 +122,14 @@
 
           const deleteBtn = document.createElement("button");
           deleteBtn.textContent = "Slett";
-          deleteBtn.style.width = "50px";
+          deleteBtn.style.width = "33%";
           deleteBtn.addEventListener("click", () => {
             deletePokemon(pokemon);
           });
 
           const editBtn = document.createElement("button");
           editBtn.textContent = "Endre";
-          editBtn.style.width = "50px";
+          editBtn.style.width = "33%";
           editBtn.addEventListener("click", function () {
             editPokemon(pokemon);
           });
@@ -119,6 +138,7 @@
           pokemonCard.appendChild(deleteBtn);
           pokemonCard.appendChild(editBtn);
 
+          const allBtn = (saveBtn, editBtn, deleteBtn);
           return pokemonCard;
         }
 
@@ -202,6 +222,8 @@
           const savedPokemonHeader = document.createElement("h3");
           savedPokemonHeader.textContent = "Mine lagrede Pokémons:";
           savedPokemonContainer.appendChild(savedPokemonHeader);
+
+          savedPokemonHeader.style.width = "100%";
 
           const savedPokemons =
             JSON.parse(localStorage.getItem("savedPokemons")) || [];
@@ -315,6 +337,9 @@
                   return generateRandomId(pokemonNumber);
                 }
               }*/
+
+        //styling av cards
+        const pokemonContainer = document.querySelector("#show-all-pokemon");
 
         fetchPokemon();
         loadSavedPokemons();
