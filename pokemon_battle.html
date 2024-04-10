@@ -360,7 +360,6 @@
 
           const selectedSkill = skill.textContent;
           const damage = generateRandomDamage(5, 20);
-          const enemyImg = document.querySelector(".img-container.enemy img");
 
           counterAttack();
 
@@ -380,6 +379,7 @@
             }
             myPokemonAttack();
           } else {
+            enemyImg.remove();
           }
         });
 
@@ -426,7 +426,7 @@
 
       function enemyAttack() {
         if (parseInt(enemy.currentHP) < 0) {
-          myPokemon.alive = false;
+          myPokemon[(0, 1, 2)].alive = false;
           const selectedEnemy = document.querySelectorAll(
             `.img-container .enemy".${enemy.id}`
           );
