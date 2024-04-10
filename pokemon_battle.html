@@ -361,6 +361,8 @@
           const selectedSkill = skill.textContent;
           const damage = generateRandomDamage(5, 20);
 
+          counterAttack();
+
           console.log("Skill-elementet ble klikket på:", skill.textContent);
 
           if (selectedSkill !== "skill 4") {
@@ -400,6 +402,21 @@
           );
           mySelectedPokemon.remove();
           alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
+        }
+      }
+
+      async function counterAttack() {
+        try {
+          const damage = generateRandomDamage(5, 15);
+          myPokemon.currentHP -= damage;
+
+          console.log(`Fienden angriper og forårsaker ${damage} HP skade.`);
+
+          document.querySelector(
+            "#my-pokemon-health-txt"
+          ).textContent = `HP: ${myPokemon.currentHP}`;
+        } catch (error) {
+          console.error("Klarte ikke generere motangrep", error);
         }
       }
 
