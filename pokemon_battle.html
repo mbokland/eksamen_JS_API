@@ -373,6 +373,14 @@
           ).textContent = `HP: ${enemy.currentHP}`;
         });
 
+        function useCherry() {
+          const boostHP = 10;
+          myPokemon.currentHP += boostHP;
+        }
+
+        const cheriSkill = document.querySelectorAll("#skills-list .skill")[3];
+        cheriSkill.addEventListener("click", useCherry);
+
         function myPokemonAttack() {
           if (parseInt(myPokemon.currentHP) < 0) {
             myPokemon[(0, 1, 2)].alive = false;
