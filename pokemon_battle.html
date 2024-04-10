@@ -380,7 +380,6 @@
             }
             myPokemonAttack();
           } else {
-            enemyImg.remove();
           }
         });
 
@@ -427,7 +426,7 @@
 
       function enemyAttack() {
         if (parseInt(enemy.currentHP) < 0) {
-          myPokemon[(0, 1, 2)].alive = false;
+          myPokemon.alive = false;
           const selectedEnemy = document.querySelectorAll(
             `.img-container .enemy".${enemy.id}`
           );
