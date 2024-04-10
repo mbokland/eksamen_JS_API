@@ -82,8 +82,8 @@
           //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
           const pokemonCard = document.createElement("div");
           pokemonCard.innerHTML = `
-          <p>Navn: ${pokemon.name}</p>
-          <p>Type: ${pokemon.types[0].type.name}</p>`;
+          <p style ="text-align:center">Navn: ${pokemon.name}</p>
+          <p style ="text-align:center">Type: ${pokemon.types[0].type.name}</p>`;
 
           //Style card
           pokemonCard.style.backgroundColor = pokemonColor;
