@@ -133,9 +133,6 @@
           const enemyHP = getHP(enemyData);
           const myPokemonHP = getHP(myPokemonData);
 
-          console.log("Enemy HP:", enemyHP); // Debugging
-          console.log("My Pokemon HP:", myPokemonHP); // Debugging
-
           document.querySelector("#enemy-name-txt").innerHTML =
             randomPokemon[0].name;
           document.querySelector(
@@ -165,6 +162,8 @@
           skillItem.forEach((item, index) => {
             item.textContent = myPokemonMoves[index];
           });
+
+          return { enemyHP, myPokemonHP };
         } catch (error) {
           console.error("Feil ved oppdatering av navn på Pokemon", error);
         }
@@ -225,11 +224,11 @@
 
       async function addDataToArrays() {
         try {
+          const { enemyHP, myPokemonHP } = await addPokemonNameData();
+
           const randomPokemon = await fetchRandomPokemon(); //henter fetched pokemons imnn til funksjonen
           const enemyData = randomPokemon[0]; //skiller mellom fiende og mine pokemons
           const myPokemonData = randomPokemon[1];
-
-          const { enemyHP, myPokemonHP } = await addPokemonNameData();
 
           for (let i = 0; i < 3; i++) {
             const enemy = {
@@ -247,7 +246,7 @@
           const myPokemon = {
             id: myPokemonData.id,
             name: myPokemonData.name,
-            maxHP: myPokemonHP(myPokemonData),
+            maxHP: myPokemonHP,
             /*currentHP: myPokemonCurrentHP,
               damage: skillItem.id, //Denne må ha en funksjon/fetch først*/
             alive: true,
