@@ -403,6 +403,7 @@
           );
           mySelectedPokemon.remove();
           alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
+          replaceFaintedPokemon();
         }
       }
 
@@ -423,14 +424,15 @@
 
       function enemyAttack() {
         if (parseInt(enemy.currentHP) < 0) {
-          myPokemon.alive = false;
-          const mySelectedEnemy = document.querySelectorAll(
-            `.img-container .my-pokemon".${pokemon.id}`
+          enemy.alive = false;
+          const selectedEnemy = document.querySelectorAll(
+            `.img-container .enemy".${enemy.id}`
           );
-          if (mySelectedPokemon.lengt > 0) {
+          if (selectedEnemy.lengt > 0) {
             selectedEnemy.forEach((pokemon) => pokemon.remove());
           }
           alert(`Dine Pokémons har ingen HP igjen, spillet er tapt!`);
+          replaceFaintedPokemon();
         }
       }
 
