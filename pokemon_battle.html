@@ -72,24 +72,6 @@
         }
       }
 
-      async function fetchRandomPokemonData(pokemonId) {
-        try {
-          const pokemonDataRequest = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
-          );
-          const data = await pokemonDataRequest.json();
-
-          return data;
-        } catch {
-          console.error("Klarte ikke å hente Pokemons HP");
-        }
-      }
-
-      function getHP(pokemonData) {
-        return pokemonData.stats.find((stat) => stat.stat.name === "hp")
-          .base_stat;
-      }
-
       async function fetchPokemonImg() {
         try {
           const randomPokemonData = await fetchRandomPokemon();
@@ -111,6 +93,19 @@
           myPokemonContainer.innerHTML = `<img src="${myPokemonImgUrl}" alt="Din Pokemons bilde">`;
         } catch (error) {
           console.error("Feil ved lasting av bilde", error);
+        }
+      }
+
+      async function fetchRandomPokemonData(pokemonId) {
+        try {
+          const pokemonDataRequest = await fetch(
+            `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
+          );
+          const data = await pokemonDataRequest.json();
+
+          return data;
+        } catch {
+          console.error("Klarte ikke å hente Pokemons HP");
         }
       }
 
@@ -169,26 +164,6 @@
         }
       }
 
-      async function saveEnemyMoves() {
-        try {
-          const randomPokemon = await fetchRandomPokemon();
-          const enemyData = await fetchRandomPokemonData(randomPokemon[0].id);
-
-          if (enemyData.moves && enemyData.moves.length > 0) {
-            const enemySkills = enemyData.moves
-              .slice(0, 4)
-              .map((move) => move.move.name);
-
-            sessionStorage.setItem("enemySkills", JSON.stringify(enemySkills));
-          }
-        } catch (error) {
-          console.error(
-            "Klarte ikke å lagre fiendens skills i sessionStorage",
-            error
-          );
-        }
-      }
-
       //hente inn attack-container og skills
       const myPokemonContainer = document.querySelector(".my-attack-container");
       const skills = document.querySelector(".skill");
@@ -217,15 +192,29 @@
         });
       });
 
-      function myPokemonAttack() {
-        if (myPokemon.currentHP < 0) {
-          myPokemon[(0, 1, 2)].alive = false;
-          const mySelectedPokemon = document.querySelectorAll(
-            `.img-container .my-pokemon".${myPokemon}`
+      async function saveEnemyMoves() {
+        try {
+          const randomPokemon = await fetchRandomPokemon();
+          const enemyData = await fetchRandomPokemonData(randomPokemon[0].id);
+
+          if (enemyData.moves && enemyData.moves.length > 0) {
+            const enemySkills = enemyData.moves
+              .slice(0, 4)
+              .map((move) => move.move.name);
+
+            sessionStorage.setItem("enemySkills", JSON.stringify(enemySkills));
+          }
+        } catch (error) {
+          console.error(
+            "Klarte ikke å lagre fiendens skills i sessionStorage",
+            error
           );
-          mySelectedPokemon.remove();
-          alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
         }
+      }
+
+      function getHP(pokemonData) {
+        return pokemonData.stats.find((stat) => stat.stat.name === "hp")
+          .base_stat;
       }
 
       async function addDataToArrays() {
@@ -261,6 +250,17 @@
           myPokemonsArray.push(myPokemon);
         } catch (error) {
           console.error("Klarte ikke legge til i Arrays", error);
+        }
+      }
+
+      function myPokemonAttack() {
+        if (myPokemon.currentHP < 0) {
+          myPokemon[(0, 1, 2)].alive = false;
+          const mySelectedPokemon = document.querySelectorAll(
+            `.img-container .my-pokemon".${myPokemon}`
+          );
+          mySelectedPokemon.remove();
+          alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
         }
       }
 
