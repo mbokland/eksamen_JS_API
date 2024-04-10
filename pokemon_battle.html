@@ -364,45 +364,54 @@
 
           console.log("Skill-elementet ble klikket på:", skill.textContent);
 
-          enemy.currentHP -= damage;
+          if (selectedSkill !== "skill 4") {
+            enemy.currentHP -= damage;
 
-          console.log(`${selectedSkill} forårsaker ${damage} HP skade.`);
+            console.log(`${selectedSkill} forårsaker ${damage} HP skade.`);
 
-          document.querySelector(
-            "#enemy-health-txt"
-          ).textContent = `HP: ${enemy.currentHP}`;
+            document.querySelector(
+              "#enemy-health-txt"
+            ).textContent = `HP: ${enemy.currentHP}`;
+          } else {
+            useCherry();
+          }
+          myPokemonAttack();
         });
 
         function useCherry() {
           const boostHP = 10;
           myPokemon.currentHP += boostHP;
+
+          document.querySelector(
+            "#my-pokemon-health-txt"
+          ).textContent = `HP: ${myPokemon.currentHP}`;
         }
 
         const cheriSkill = document.querySelectorAll("#skills-list .skill")[3];
         cheriSkill.addEventListener("click", useCherry);
-
-        function myPokemonAttack() {
-          if (parseInt(myPokemon.currentHP) < 0) {
-            myPokemon[(0, 1, 2)].alive = false;
-            const mySelectedPokemon = document.querySelectorAll(
-              `.img-container .my-pokemon".${myPokemon.id}`
-            );
-            mySelectedPokemon.remove();
-            alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
-          }
-        }
-
-        function enemyAttack() {
-          if (parseInt(enemy.currentHP) < 0) {
-            myPokemon[(0, 1, 2)].alive = false;
-            const selectedEnemy = document.querySelectorAll(
-              `.img-container .enemy".${enemy.id}`
-            );
-            selectedEnemy.remove();
-            alert(`${myPokemon.name} har slått ut ${enemy.name}`);
-          }
-        }
       });
+
+      function myPokemonAttack() {
+        if (parseInt(myPokemon.currentHP) < 0) {
+          myPokemon[(0, 1, 2)].alive = false;
+          const mySelectedPokemon = document.querySelectorAll(
+            `.img-container .my-pokemon".${myPokemon.id}`
+          );
+          mySelectedPokemon.remove();
+          alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
+        }
+      }
+
+      function enemyAttack() {
+        if (parseInt(enemy.currentHP) < 0) {
+          myPokemon[(0, 1, 2)].alive = false;
+          const selectedEnemy = document.querySelectorAll(
+            `.img-container .enemy".${enemy.id}`
+          );
+          selectedEnemy.remove();
+          alert(`${myPokemon.name} har slått ut ${enemy.name}`);
+        }
+      }
 
       showPokemonImages();
       addPokemonNameData();
