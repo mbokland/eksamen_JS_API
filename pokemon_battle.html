@@ -227,7 +227,7 @@
           //Fetch og display skills (move)
           //Oppdatere Attack-container med myPokemonMoves
           const myPokemonMoves = myPokemonData.moves
-            .slice(0, 4)
+            .slice(0, 3)
             .map((move) => move.move.name);
 
           //EnemyMoves skal lagres skjult
@@ -362,7 +362,7 @@
           if (parseInt(myPokemon.currentHP) < 0) {
             myPokemon[(0, 1, 2)].alive = false;
             const mySelectedPokemon = document.querySelectorAll(
-              `.img-container .my-pokemon".${myPokemon}`
+              `.img-container .my-pokemon".${myPokemon.id}`
             );
             mySelectedPokemon.remove();
             alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
