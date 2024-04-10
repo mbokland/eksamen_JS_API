@@ -116,10 +116,17 @@
 
       async function fetchStatsFromApi() {
         try {
+          const pokemonStatsDataRequest = await fetch(
+            `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
+          );
+          const stats = await pokemonStatsDataRequest.json();
+
+          return stats;
         } catch (error) {
           console.error("Klarte ikke hente stats fra API", error);
         }
       }
+
       async function showPokemonImages() {
         try {
           await fetchPokemonImg();
