@@ -413,6 +413,12 @@
 
       async function counterAttack() {
         try {
+          if (enemy.currentHP <= 0) {
+            enemy.alive = false;
+            alert("Fiendens Pokémon har ingen HP igjen!");
+            await replaceFaintedPokemon();
+            return;
+          }
           const damage = generateRandomDamage(5, 15);
           myPokemon.currentHP -= damage;
 
