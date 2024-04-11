@@ -464,16 +464,28 @@
            <p>HP: ${getHP(pokemon)}</p>
            `;
 
+        pokemonCard.style.display = "flex";
+        pokemonCard.style.flexWrap = "wrap";
+
         //legge til nytt element(bilde)
         const imgCard = document.createElement("img");
+        const uniqueId = `pokemon-${pokemon.name.toLowerCase()}-${pokemonNumber}`;
+        imgCard.id = uniqueId;
+        console.log(`Added imgCard with id: ${uniqueId}`);
         imgCard.src = pokemonImageUrl;
         pokemonCard.appendChild(imgCard);
-        imgCard.style.position = "flex";
-        imgCard.style.flexWrap = "wrap";
+        imgCard.style.position = "fixed";
+        imgCard.style.top = "350px";
+        imgCard.style.right = "200px";
+        imgCard.style.width = " 300px";
 
+        pokemonCard.appendChild(imgCard);
         return pokemonCard;
-        pokemonCards.push(pokemonCard);
+
+        const enemy1 = document.querySelector("#pokemon-pidgeot-18");
+        enemy1.style.width = "100%";
       }
+
       fetchPokemon();
 
       function getRandomImg() {
