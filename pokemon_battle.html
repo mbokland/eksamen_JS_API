@@ -68,6 +68,7 @@
             const randomPokemonRequest = await fetch(
               "https://pokeapi.co/api/v2/pokemon/" + randomPokemonId
             );
+
             const randomPokemonData = await randomPokemonRequest.json();
             randomPokemon.push(randomPokemonData);
           }
@@ -101,32 +102,33 @@
           console.error("Feil ved lasting av bilde", error);
         }
       }
-
+      /*
       async function fetchRandomPokemonData(pokemonId) {
         try {
-          const pokemonDataRequest = await fetch(
+          const response = await fetch(
             `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
           );
-          const data = await pokemonDataRequest.json();
-
-          return data;
-        } catch {
+          const data = await response.json();
+          const stats = data.stats;
+          return data; //Må hente all data for å fetche stats
+          return stats;
+        } catch (error) {
           console.error("Klarte ikke å hente Pokemons HP");
         }
       }
 
-      async function fetchStatsFromApi(pokemonId) {
+      async function fetchPokemonStats(pokemonId) {
         try {
-          const pokemonStatsDataRequest = await fetch(
-            `https://pokeapi.co/api/v2/stat/`
+          const response = await fetch(
+            `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
           );
-          const stats = await pokemonStatsDataRequest.json();
-
+          const data = await response.json();
+          const stats = data.stats; // Stats-objektet for den gitte Pokémonen
           return stats;
         } catch (error) {
-          console.error("Klarte ikke hente stats fra API", error);
+          console.error("Feil ved henting av Pokémon-statistikk:", error);
         }
-      }
+      }*/
 
       async function fetchBerries() {
         try {
@@ -156,8 +158,20 @@
             randomPokemon[1].id
           );
 
-          const enemyHP = getHP(enemyData);
-          const myPokemonHP = getHP(myPokemonData);
+          const enemyStats = enemyData.stats;
+          const myPokemonStats = myPokemonData.stats;
+
+          console.log("Fiendens stats:", enemyStats);
+          console.log("Din Pokémon's stats:", myPokemonStats);
+
+          /*const enemyHP = getHP(enemyData);
+          const myPokemonHP = getHP(myPokemonData);*/
+          const enemyHP = enemyStats.find(
+            (stat) => stat.stat.name === "hp"
+          ).base_stat;
+          const myPokemonHP = myPokemonStats.find(
+            (stat) => stat.stat.name === "hp"
+          ).base_stat;
 
           document.querySelector("#enemy-name-txt").innerHTML =
             randomPokemon[0].name;
@@ -194,7 +208,7 @@
 
           //style health-bars
           healthBarTxt.forEach((container) => {
-            container.style.color = "green";
+            container.style.color = "Black";
             container.style.display = "flex";
             container.style.alignItems = "center";
             container.style.justifyContent = "space-between";
@@ -262,6 +276,28 @@
         }
       }
 
+      async function updateHealthbar(pokemonId) {
+        try {
+          const stat = await fetchPokemonStats(pokemonId);
+          const selectedStat = stat[5].base_stat;
+          const healthBars = document.querySelectorAll(".healthbar-container");
+
+          healthBars.forEach((healthBar) => {
+            healthBar.style.color = `${selectedStat}px`;
+
+            if (selectedStat >= 75) {
+              healthBar.style.backgroundColor = "green";
+            } else if (selectedStat >= 50) {
+              healthBar.style.backgroundColor = "yellow";
+            } else {
+              healthBar.style.backgroundColor = "red";
+            }
+          });
+        } catch (error) {
+          console.error("Feil ved oppdatering av healthbar:", error);
+        }
+      }
+
       //hente inn attack-container og skills
       const myPokemonContainer = document.querySelector(".my-attack-container");
       const skills = document.querySelector(".skill");
@@ -317,11 +353,28 @@
 
       async function addDataToArrays() {
         try {
-          const { enemyHP, myPokemonHP } = await addPokemonNameData();
-
           const randomPokemon = await fetchRandomPokemon(); //henter fetched pokemons imnn til funksjonen
-          const enemyData = randomPokemon[0]; //skiller mellom fiende og mine pokemons
           const myPokemonData = randomPokemon[1];
+
+          const myPokemon = await createPokemonObject(myPokemonData);
+
+          myPokemonsArray.push(myPokemon);
+
+          const enemyData = randomPokemon[0]; //skiller mellom fiende og mine pokemons
+          const enemyStats = await fetchPokemonStats(enemyData.id);
+
+          const enemyHPStat = enemyStats.find(
+            (stat) => stat.stat.name === "hp"
+          );
+          const enemyHP = enemyHPStat.base_stat;
+          /*
+          const pokemonStats = await fetchPokemonStats(pokemonData.id);
+          /*const { enemyHP, myPokemonHP } = await addPokemonNameData();*/
+          /*
+          const hpStat = pokemonStats.find((stat) => stat.stat.name === "hp");
+          const currentHP = hpStat.base_stat;
+
+          */
 
           enemy = {
             id: enemyData.id,
@@ -332,16 +385,21 @@
           };
 
           enemiesArray.push(enemy);
-
-          myPokemon = {
-            id: myPokemonData.id,
-            name: myPokemonData.name,
-            maxHP: myPokemonHP,
-            currentHP: myPokemonHP,
+          /*
+          const myPokemonObject = {
+            id: pokemonData.id,
+            name: pokemonData.name,
+            maxHP: currentHP,
+            currentHP: currentHP,
             alive: true,
           };
 
+          return myPokemon;
+/*
           myPokemonsArray.push(myPokemon);
+*/
+          updateHealthbar(enemy.id);
+          updateHealthbar(myPokemon.id);
         } catch (error) {
           console.error("Klarte ikke legge til i Arrays", error);
         }
