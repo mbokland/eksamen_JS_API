@@ -397,14 +397,13 @@
 
       async function myPokemonAttack() {
         try {
-          if (parseInt(myPokemon.currentHP) <= 0) {
+          if (myPokemon.currentHP <= 0) {
             myPokemon.alive = false;
             alert("din pokemon har ingen HP igjen, og er ute av spillet!");
-            const mySelectedPokemon = document.querySelectorAll(
-              `.img-container .my-pokemon`
+            const myPokemonImage = document.querySelector(
+              ".my-pokemon-container"
             );
-            mySelectedPokemon.remove();
-            alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
+            myPokemonImage.remove();
           }
         } catch (error) {
           console.error("HMMMM.. HP har gått i minus");
@@ -431,7 +430,7 @@
           console.error("Klarte ikke generere motangrep", error);
         }
       }
-
+      /*
       function enemyAttack() {
         if (parseInt(enemy.currentHP) <= 0) {
           enemy.alive = false;
@@ -444,7 +443,7 @@
           alert(`Dine Pokémons har ingen HP igjen, spillet er tapt!`);
           replaceFaintedPokemon();
         }
-      }
+      }*/
 
       async function replaceFaintedPokemon() {
         try {
