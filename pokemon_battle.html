@@ -102,33 +102,54 @@
           console.error("Feil ved lasting av bilde", error);
         }
       }
-      /*
-      async function fetchRandomPokemonData(pokemonId) {
-        try {
-          const response = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
-          );
-          const data = await response.json();
-          const stats = data.stats;
-          return data; //Må hente all data for å fetche stats
-          return stats;
-        } catch (error) {
-          console.error("Klarte ikke å hente Pokemons HP");
-        }
-      }
 
-      async function fetchPokemonStats(pokemonId) {
-        try {
-          const response = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
+      const fetchStats = () => {
+        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
+          .then((response) => response.json())
+          .then((data) => {
+            setPokemon({
+              name: data.name,
+              hp: data.stats[0].base_stat,
+              attack: data.stats[1].base_stat,
+              defense: data.stats[2].base_stat,
+            });
+          })
+          .catch((error) =>
+            console.error("Feil ved henting av Pokémon-statistikk:", error)
           );
-          const data = await response.json();
-          const stats = data.stats; // Stats-objektet for den gitte Pokémonen
-          return stats;
-        } catch (error) {
-          console.error("Feil ved henting av Pokémon-statistikk:", error);
-        }
-      }*/
+      };
+
+      /*fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
+                    .then((response) => response.json())
+                    .then((data) => console.log(data))
+                    .catch((error) => console.error(error));
+                  /*
+                  async function fetchRandomPokemonData(pokemonId) {
+                    try {
+                      const response = await fetch(
+                        `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
+                      );
+                      const data = await response.json();
+                      const stats = data.stats;
+                      return data; //Må hente all data for å fetche stats
+                      return stats;
+                    } catch (error) {
+                      console.error("Klarte ikke å hente Pokemons HP");
+                    }
+                  }
+
+                  async function fetchPokemonStats(pokemonId) {
+                    try {
+                      const response = await fetch(
+                        `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
+                      );
+                      const data = await response.json();
+                      const stats = data.stats; // Stats-objektet for den gitte Pokémonen
+                      return stats;
+                    } catch (error) {
+                      console.error("Feil ved henting av Pokémon-statistikk:", error);
+                    }
+                  }*/
 
       async function fetchBerries() {
         try {
@@ -165,7 +186,7 @@
           console.log("Din Pokémon's stats:", myPokemonStats);
 
           /*const enemyHP = getHP(enemyData);
-          const myPokemonHP = getHP(myPokemonData);*/
+                      const myPokemonHP = getHP(myPokemonData);*/
           const enemyHP = enemyStats.find(
             (stat) => stat.stat.name === "hp"
           ).base_stat;
@@ -368,13 +389,13 @@
           );
           const enemyHP = enemyHPStat.base_stat;
           /*
-          const pokemonStats = await fetchPokemonStats(pokemonData.id);
-          /*const { enemyHP, myPokemonHP } = await addPokemonNameData();*/
+                      const pokemonStats = await fetchPokemonStats(pokemonData.id);
+                      /*const { enemyHP, myPokemonHP } = await addPokemonNameData();*/
           /*
-          const hpStat = pokemonStats.find((stat) => stat.stat.name === "hp");
-          const currentHP = hpStat.base_stat;
+                      const hpStat = pokemonStats.find((stat) => stat.stat.name === "hp");
+                      const currentHP = hpStat.base_stat;
 
-          */
+                      */
 
           enemy = {
             id: enemyData.id,
@@ -386,18 +407,18 @@
 
           enemiesArray.push(enemy);
           /*
-          const myPokemonObject = {
-            id: pokemonData.id,
-            name: pokemonData.name,
-            maxHP: currentHP,
-            currentHP: currentHP,
-            alive: true,
-          };
+                      const myPokemonObject = {
+                        id: pokemonData.id,
+                        name: pokemonData.name,
+                        maxHP: currentHP,
+                        currentHP: currentHP,
+                        alive: true,
+                      };
 
-          return myPokemon;
-/*
-          myPokemonsArray.push(myPokemon);
-*/
+                      return myPokemon;
+            /*
+                      myPokemonsArray.push(myPokemon);
+            */
           updateHealthbar(enemy.id);
           updateHealthbar(myPokemon.id);
         } catch (error) {
@@ -406,7 +427,7 @@
       }
 
       //STARTER SPILLET
-      const moveBtn = document.querySelectorAll(".skill");
+      /*const moveBtn = document.querySelectorAll(".skill");
 
       function generateRandomDamage(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -526,6 +547,38 @@
         }
       }
 
+*/
+
+      fetchStats();
+
+      setPokemon((prevPokemon) => ({
+        ...prevPokemon,
+        hp: pokemonStats.hp, // antar at hp er et attributt i pokemonStats
+      }));
+
+      const attackEnemy = () => {
+        const enemyAttackPower = calculateEnemyAttack(); // anta at du har en funksjon for å beregne fiendens angrepsstyrke
+        const damageDealt = pokemonStats.attack - enemyAttackPower;
+        if (damageDealt > 0) {
+          // Fienden mister hp
+          decreaseEnemyHp(damageDealt);
+        } else {
+          // Pokémonen har ikke nok angrepskraft til å skade fienden
+          console.log("Fienden er for sterk!");
+        }
+      };
+
+      const defendAgainstEnemy = () => {
+        const enemyAttackPower = calculateEnemyAttack(); // anta at du har en funksjon for å beregne fiendens angrepsstyrke
+        const damageReceived = enemyAttackPower - pokemonStats.defense;
+        if (damageReceived > 0) {
+          // Pokémonen mister hp
+          decreasePokemonHp(damageReceived);
+        } else {
+          // Pokémonen har nok forsvar til å unngå skade
+          console.log("Du forsvarte deg mot angrepet!");
+        }
+      };
       showPokemonImages();
       addPokemonNameData();
       saveEnemyMoves();
