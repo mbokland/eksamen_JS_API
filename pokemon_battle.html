@@ -81,8 +81,14 @@
       async function fetchPokemonImg() {
         try {
           const randomPokemonData = await fetchRandomPokemon();
-          const enemyId = randomPokemonData[0].id;
-          const myPokemonId = randomPokemonData[1].id;
+          const enemy1 = randomPokemonData[0].id;
+          const myPokemon1 = randomPokemonData[1].id;
+          const enemy2 = randomPokemonData[2].id;
+          const myPokemon2 = randomPokemonData[3].id;
+          const enemy3 = randomPokemonData[4].id;
+          const myPokemon3 = randomPokemonData[5].id;
+
+          return { enemy1, myPokemon1, enemy2, myPokemon2, enemy3, myPokemon3 };
 
           const enemyImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${enemyId}.png`;
 
@@ -96,7 +102,7 @@
           const myPokemonContainer = document.querySelector(
             ".my-pokemon-container .img-container"
           );
-          myPokemonContainer.innerHTML = `<img src="${myPokemonImgUrl}" alt="Din Pokemons bilde">`;
+          myPokemonContainer.innerHTML = `<img src="${myPokemonImgUrl}" alt="Din Pokemons bilde" class="my-pokemon">`;
         } catch (error) {
           console.error("Feil ved lasting av bilde", error);
         }
@@ -311,8 +317,20 @@
       }
 
       function getHP(pokemonData) {
-        return pokemonData.stats.find((stat) => stat.stat.name === "hp")
-          .base_stat;
+        if (pokemonData.stats && pokemonData.stats.length > 0) {
+          const hpStat = pokemonData.stats.find(
+            (stat) => stat.stat.name === "hp"
+          );
+          if (hpStat) {
+            return hpStat.base_stat;
+          } else {
+            console.error("Klarte ikke finne HP-statistikken for Pokémon.");
+            return 0; // Returnerer 0 hvis HP-statistikken ikke ble funnet
+          }
+        } else {
+          console.error("Pokémon-data mangler statistikk.");
+          return 0; // Returnerer 0 hvis Pokémon-data mangler statistikk
+        }
       }
 
       async function addDataToArrays() {
@@ -468,6 +486,9 @@
           if (!enemy.alive) {
             enemy = newPokemon;
             enemiesArray[0] = enemy;
+            document.querySelector(
+              ".enemy-container .img-container.enemy img"
+            ).src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${enemy.id}.png`;
             document.querySelector("#enemy-name-txt").textContent = enemy.name;
             document.querySelector(
               "#enemy-health-txt"
@@ -475,6 +496,9 @@
           } else if (!myPokemon.alive) {
             myPokemon = newPokemon;
             myPokemonsArray[0] = myPokemon;
+            document.querySelector(
+              ".my-pokemon-container .img-container.my-pokemon img"
+            ).src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${myPokemon.id}.png`;
             document.querySelector("#my-pokemon-name").textContent =
               myPokemon.name;
             document.querySelector(
