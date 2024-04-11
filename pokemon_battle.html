@@ -82,6 +82,7 @@
               "https://pokeapi.co/api/v2/pokemon/" + randomPokemonId
             );
             const randomPokemonData = await randomPokemonRequest.json();
+            randomPokemonData.id = randomPokemonId;
             randomPokemon.push(randomPokemonData);
           }
 
@@ -94,27 +95,23 @@
       async function fetchPokemonImg() {
         try {
           const randomPokemonData = await fetchRandomPokemon();
-          const enemyId = randomPokemonData[0].id;
-          const myPokemonId = randomPokemonData[1].id;
-
-          const enemyImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${enemyId}.png`;
-          const myPokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${myPokemonId}.png`;
-
-          const enemyContainer = document.querySelectorAll(
-            ".enemy-container .img-container.enemy"
-          );
-
-          const myPokemonContainer = document.querySelectorAll(
-            ".my-pokemon-container .img-container"
-          );
 
           for (let i = 0; i < 3; i++) {
-            enemyContainer[
-              i
-            ].innerHTML = `<img src="${enemyImgUrl}" alt="Fiendens bilde">`;
-            myPokemonContainer[
-              i
-            ].innerHTML = `<img src="${myPokemonImgUrl}" alt="Din Pokemons bilde">`;
+            const enemyId = randomPokemonData[i].id;
+            const myPokemonId = randomPokemonData[i].id;
+
+            const enemyImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${enemyId}.png`;
+            const myPokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${myPokemonId}.png`;
+
+            const enemyContainer = document.querySelectorAll(
+              ".enemy-container .img-container.enemy"
+            )[i];
+            const myPokemonContainer = document.querySelectorAll(
+              ".my-pokemon-container .img-container.my-pokemon"
+            )[i];
+
+            enemyContainer.innerHTML = `<img src="${enemyImgUrl}" alt="Fiendens bilde">`;
+            myPokemonContainer.innerHTML = `<img src="${myPokemonImgUrl}" alt="Din Pokemons bilde">`;
           }
         } catch (error) {
           console.error("Feil ved lasting av bilde", error);
