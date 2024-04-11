@@ -81,26 +81,12 @@
       async function fetchPokemonImg() {
         try {
           const randomPokemonData = await fetchRandomPokemon();
-          const enemy1 = randomPokemonData[0].id;
-          const myPokemon1 = randomPokemonData[1].id;
-          const enemy2 = randomPokemonData[2].id;
-          const myPokemon2 = randomPokemonData[3].id;
-          const enemy3 = randomPokemonData[4].id;
-          const myPokemon3 = randomPokemonData[5].id;
+          const enemyId = randomPokemonData[0].id;
+          const myPokemonId = randomPokemonData[1].id;
 
-          return { enemy1, myPokemon1, enemy2, myPokemon2, enemy3, myPokemon3 };
+          const enemyImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${enemyId}.png`;
 
-          const enemyImgUrl1 = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${enemy1}.png`;
-
-          const myPokemonImgUrl1 = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${myPokemon1}.png`;
-
-          const enemyImgUrl2 = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${enemy2}.png`;
-
-          const myPokemonImgUrl2 = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${myPokemon2}.png`;
-
-          const enemyImgUrl3 = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${enemy3}.png`;
-
-          const myPokemonImgUrl3 = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${myPokemon3}.png`;
+          const myPokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${myPokemonId}.png`;
 
           const enemyContainer = document.querySelector(
             ".enemy-container .img-container.enemy"
@@ -110,7 +96,7 @@
           const myPokemonContainer = document.querySelector(
             ".my-pokemon-container .img-container"
           );
-          myPokemonContainer.innerHTML = `<img src="${myPokemonImgUrl}" alt="Din Pokemons bilde" class="my-pokemon">`;
+          myPokemonContainer.innerHTML = `<img src="${myPokemonImgUrl}" alt="Din Pokemons bilde">`;
         } catch (error) {
           console.error("Feil ved lasting av bilde", error);
         }
@@ -324,20 +310,28 @@
         }
       }
 
-      function getHP(pokemonData) {
-        if (pokemonData.stats && pokemonData.stats.length > 0) {
-          const hpStat = pokemonData.stats.find(
-            (stat) => stat.stat.name === "hp"
+      async function getHP() {
+        try {
+          const randomPokemonId = Math.floor(Math.random() * 250) + 1;
+          const response = await fetch(
+            "https://pokeapi.co/api/v2/pokemon/" + randomPokemonId
           );
-          if (hpStat) {
-            return hpStat.base_stat;
+          if (pokemonData.stats && pokemonData.stats.length > 0) {
+            const hpStat = pokemonData.stats.find(
+              (stat) => stat.stat.name === "hp"
+            );
+            if (hpStat) {
+              return parseInt(hpStat.base_stat);
+            } else {
+              console.error("Klarte ikke finne HP-statistikken for Pokémon.");
+              return getHP(newPokemonData); // Returnerer 0 hvis HP-statistikken ikke ble funnet
+            }
           } else {
-            console.error("Klarte ikke finne HP-statistikken for Pokémon.");
-            return 0; // Returnerer 0 hvis HP-statistikken ikke ble funnet
+            console.error("Pokémon-data mangler statistikk.");
+            return newPokemonData; // Returnerer 0 hvis Pokémon-data mangler statistikk
           }
-        } else {
-          console.error("Pokémon-data mangler statistikk.");
-          return 0; // Returnerer 0 hvis Pokémon-data mangler statistikk
+        } catch {
+          console.error("GetHP Funker ikke");
         }
       }
 
@@ -399,6 +393,10 @@
             document.querySelector(
               "#enemy-health-txt"
             ).textContent = `HP: ${enemy.currentHP}`;
+
+            if (enemy.currentHP <= 0) {
+              await replaceFaintedPokemon();
+            }
           } else {
             useCherry();
           }
@@ -430,14 +428,14 @@
             return;
 
             /*
-          const mySelectedPokemon = document.querySelectorAll(
-            `.img-container .my-pokemon`
-          );
-          mySelectedPokemon.remove();
-          alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
+            const mySelectedPokemon = document.querySelectorAll(
+              `.img-container .my-pokemon`
+            );
+            mySelectedPokemon.remove();
+            alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
 
 
-          replaceFaintedPokemon();*/
+            replaceFaintedPokemon();*/
           }
         } catch (error) {
           console.error("HMMMM.. HP har gått i minus");
@@ -482,7 +480,10 @@
 
       async function replaceFaintedPokemon() {
         try {
-          const newPokemonData = await fetchRandomPokemon();
+          const newPokemonData = await fetch(
+            "https://pokeapi.co/api/v2/pokemon/1"
+          );
+
           const newPokemon = {
             id: newPokemonData.id,
             name: newPokemonData.name,
