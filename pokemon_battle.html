@@ -395,20 +395,38 @@
         });
       });
 
-      function myPokemonAttack() {
-        if (parseInt(myPokemon.currentHP) <= 0) {
-          myPokemon.alive = false;
+      async function myPokemonAttack() {
+        try {
+          if (myPokemon.currentHP <= 0) {
+            myPokemon.alive = false;
+            alert("din pokemon har ingen HP igjen, og er ute av spillet!");
+            await replaceFaintedPokemon();
+            return;
+
+            /*
           const mySelectedPokemon = document.querySelectorAll(
             `.img-container .my-pokemon`
           );
           mySelectedPokemon.remove();
           alert("Dine Pokémons har ingen HP igjen, spillet er tapt!");
-          replaceFaintedPokemon();
+
+
+          replaceFaintedPokemon();*/
+          }
+        } catch (error) {
+          console.error("HMMMM.. HP har gått i minus");
         }
       }
 
       async function counterAttack() {
         try {
+          if (enemy.currentHP <= 0) {
+            enemy.alive = false;
+            alert("Fiendens Pokémon har ingen HP igjen!");
+            await replaceFaintedPokemon();
+            return;
+          }
+
           const damage = generateRandomDamage(5, 15);
           myPokemon.currentHP -= damage;
 
