@@ -19,7 +19,7 @@
           <div class="healthbar-container">
             <div class="healthbar enemy-health"></div>
             <div class="text-container">
-              <p id="enemy-name-txt">Fiendens navn</p>
+              <p id="enemy-name-txt"></p>
               <p id="enemy-health-txt"></p>
             </div>
           </div>
@@ -29,8 +29,8 @@
           <div class="healthbar-container">
             <div class="healthbar enemy-health"></div>
             <div class="text-container">
-              <p id="enemy-name-txt">Fiendens navn</p>
-              <p id="enemy-health-txt"></p>
+              <p id="enemy-name-txt">Bulbasaur</p>
+              <p id="enemy-health-txt">HP: 0</p>
             </div>
           </div>
         </div>
@@ -39,8 +39,8 @@
           <div class="healthbar-container">
             <div class="healthbar enemy-health"></div>
             <div class="text-container">
-              <p id="enemy-name-txt">Fiendens navn</p>
-              <p id="enemy-health-txt"></p>
+              <p id="enemy-name-txt">Ivysaur</p>
+              <p id="enemy-health-txt">HP: 0</p>
             </div>
           </div>
         </div>
@@ -61,8 +61,8 @@
           <div class="healthbar-container">
             <div class="healthbar my2-pokemon-health"></div>
             <div class="text-container">
-              <p id="my-pokemon-name">Min Pokémons navn</p>
-              <p id="my-pokemon-health-txt">HP:</p>
+              <p id="my-pokemon-name">caterpie</p>
+              <p id="my-pokemon-health-txt">HP: 0</p>
             </div>
           </div>
         </div>
@@ -70,8 +70,8 @@
           <div class="healthbar-container">
             <div class="healthbar my3-pokemon-health"></div>
             <div class="text-container">
-              <p id="my-pokemon-name">Min Pokémons navn</p>
-              <p id="my-pokemon-health-txt">HP:</p>
+              <p id="my-pokemon-name">metapod</p>
+              <p id="my-pokemon-health-txt">HP: 0</p>
             </div>
           </div>
         </div>
@@ -119,16 +119,27 @@
         console.log("Inne i fetchRandomPokemon");
         try {
           const randomPokemon = [];
+          console.log(randomPokemon);
           for (let i = 0; i < 3; i++) {
             const randomPokemonId = Math.floor(Math.random() * 250) + 1;
             const randomPokemonRequest = await fetch(
               "https://pokeapi.co/api/v2/pokemon/" + randomPokemonId
             );
+
             const randomPokemonData = await randomPokemonRequest.json();
             randomPokemon.push(randomPokemonData);
           }
 
           return randomPokemon;
+
+          randomPokemon.forEach((pokemon) => {
+            const uniqueId = `pokemon-${pokemon.name.toLowerCase()}-${
+              pokemon.id
+            }`;
+            const imgElement = document.getElementById(uniqueId);
+            imgElement.style.border = "2px solid black";
+            imgElement.style.borderRadius = "50%";
+          });
         } catch {
           console.error("Feil ved innlastning av Random Pokemon!");
         }
@@ -264,16 +275,17 @@
             container.style.border = "2px solid black";
           });
 
-          //fiende healhbar
-          enemyHealthContainer.style.backgroundColor = "lightgreen";
+          //angrepspanel
+          enemyHealthContainer.style.backgroundColor = "pink";
           enemyHealthContainer.style.position = "fixed";
-          enemyHealthContainer.style.left = "50px";
+          enemyHealthContainer.style.right = "50px";
+          enemyHealthContainer.style.top = "50px";
 
           //myPokemon healthbar
-          myPokemonHealtContainer.style.backgroundColor = "pink";
+          myPokemonHealtContainer.style.backgroundColor = "lightYellow";
           myPokemonHealtContainer.style.position = "fixed";
-          myPokemonHealtContainer.style.right = "50px";
-          myPokemonHealtContainer.style.bottom = "150px";
+          myPokemonHealtContainer.style.left = "50px";
+          myPokemonHealtContainer.style.bottom = "50px";
 
           //style fiendens bildecontainer
           enemyContainer.style.position = "fixed";
@@ -288,7 +300,7 @@
           //style myPokemons bildecontainer
           myPokemonContainer.style.position = "fixed";
           myPokemonContainer.style.bottom = "50px";
-          myPokemonContainer.style.left = "200px";
+          myPokemonContainer.style.left = "400px";
 
           //Fetch og display skills (move)
           //Oppdatere Attack-container med myPokemonMoves
@@ -363,6 +375,7 @@
        console.log(fetchAndUpdatePokemon);*/
 
       const showAllPokemon = document.querySelector("#show-all-pokemon");
+      showAllPokemon.style.display = "flex";
       const createPokemonName = document.querySelector("#create-pokemon-name");
 
       async function fetchPokemon() {
@@ -463,29 +476,28 @@
            <p>Navn: ${pokemon.name}</p>
            <p>HP: ${getHP(pokemon)}</p>
            `;
-
+        pokemonCard.style.width = "110px";
         pokemonCard.style.display = "flex";
-        pokemonCard.style.flexWrap = "wrap";
+        pokemonCard.style.flexDirection = "column";
+        pokemonCard.style.backgroundColor = "lightgreen";
+        pokemonCard.style.border = "1px solid white";
+        pokemonCard.style.margin = "4px";
 
         //legge til nytt element(bilde)
         const imgCard = document.createElement("img");
         const uniqueId = `pokemon-${pokemon.name.toLowerCase()}-${pokemonNumber}`;
-        imgCard.id = uniqueId;
-        console.log(`Added imgCard with id: ${uniqueId}`);
+
         imgCard.src = pokemonImageUrl;
         pokemonCard.appendChild(imgCard);
-        imgCard.style.position = "fixed";
+        imgCard.style.display = "flex";
+        imgCard.style.alignItems = "center";
         imgCard.style.top = "350px";
         imgCard.style.right = "200px";
-        imgCard.style.width = " 300px";
+        imgCard.style.width = " 80%";
 
         pokemonCard.appendChild(imgCard);
         return pokemonCard;
-
-        const enemy1 = document.querySelector("#pokemon-pidgeot-18");
-        enemy1.style.width = "100%";
       }
-
       fetchPokemon();
 
       function getRandomImg() {
@@ -504,8 +516,10 @@
       //Styling av attack-container
       myPokemonContainer.style.backgroundColor = "lightGrey";
       myPokemonContainer.style.border = "5px double Black";
-      myPokemonContainer.style.width = "400px";
+      myPokemonContainer.style.width = "500px";
+      myPokemonContainer.style.height = "100px";
       myPokemonContainer.style.position = "fixed";
+      myPokemonContainer.style.left = "33%";
       myPokemonContainer.style.bottom = "0";
 
       //styling tekst inni container
@@ -562,7 +576,7 @@
             id: enemyData.id,
             name: enemyData.name,
             maxHP: enemyHP,
-            currentHP: enemyHP,
+            currentHP: myPokemonHP,
             alive: true,
           };
 
@@ -597,14 +611,16 @@
           const damage = generateRandomDamage(5, 20);
           const enemyImg = document.querySelector(".img-container.enemy img");
 
-          counterAttack();
+          myPokemonAttack();
 
           console.log("Skill-elementet ble klikket på:", skill.textContent);
 
           if (selectedSkill !== "skill 4") {
             enemy.currentHP -= damage;
 
-            console.log(`${selectedSkill} forårsaker ${damage} HP skade.`);
+            alert(
+              `${myPokemon.name} bruker ${selectedSkill}, og forårsaker ${damage} HP skade på ${enemy.name}.`
+            );
             document.querySelector(
               "#enemy-health-txt"
             ).textContent = `HP: ${enemy.currentHP}`;
@@ -612,7 +628,18 @@
             useCherry();
           }
 
-          myPokemonAttack();
+          counterAttack();
+
+          if (!enemy.alive && myPokemon.alive) {
+            alert("Gratulerer, du har vunnet!");
+
+            if (enemy.alivev && !myPokemon.alive) {
+              alert("Du er blitt beseiret!");
+            }
+          }
+          if (!enemy.alive || !myPokemon.alive) {
+            alert("GAME OVER");
+          }
         });
 
         function useCherry() {
@@ -632,16 +659,11 @@
 
       async function myPokemonAttack() {
         try {
-          if (myPokemon.currentHP <= 0) {
-            myPokemon.alive = false;
-            alert("din pokemon har ingen HP igjen, og er ute av spillet!");
-            const myPokemonImage = document.querySelector(
-              ".my-pokemon-container"
-            );
-            myPokemonImage.remove();
-          }
+          const myPokemonImage = document.querySelector(
+            ".my-pokemon-container"
+          );
         } catch (error) {
-          console.error("HMMMM.. HP har gått i minus");
+          console.error("HMMMM.. HP har gått i minus", error);
         }
       }
 
@@ -656,16 +678,32 @@
           const damage = generateRandomDamage(5, 15);
           myPokemon.currentHP -= damage;
 
-          console.log(`Fienden angriper og forårsaker ${damage} HP skade.`);
+          alert(
+            `Fienden angriper og forårsaker ${damage} HP skade. ${myPokemon.name} har nå ${myPokemon.currentHP} igjen`
+          );
 
           document.querySelector(
             "#my-pokemon-health-txt"
           ).textContent = `HP: ${myPokemon.currentHP}`;
+
+          if (myPokemon.currentHP <= 0) {
+            myPokemon.alive = false;
+            alert("din Pokemon har ingen HP igjen!");
+            const myPokemonImage = document.querySelector(
+              ".my-pokemon-container"
+            );
+            myPokemonImage.remove();
+          }
+          /*
+          const randomIndex = Math.floor(Math.random() * randomPokemon.length);
+          const enemyPokemon = randomPokemon[randomIndex];
+          const myPokemon =
+            randomPokemon[Math.floor(Math.random() * randomPokemon.length)];*/
         } catch (error) {
           console.error("Klarte ikke generere motangrep", error);
         }
-      }
-      /*
+
+        /*
              function enemyAttack() {
                if (parseInt(enemy.currentHP) <= 0) {
                  enemy.alive = false;
@@ -680,35 +718,37 @@
                }
              }*/
 
-      async function replaceFaintedPokemon() {
-        try {
-          const newPokemonData = await fetchRandomPokemon();
-          const newPokemon = {
-            id: newPokemonData.id,
-            name: newPokemonData.name,
-            maxHP: getHP(newPokemonData),
-            currentHP: getHP(newPokemonData),
-            alive: true,
-          };
+        async function replaceFaintedPokemon() {
+          try {
+            const newPokemonData = await fetchRandomPokemon();
+            const newPokemon = {
+              id: newPokemonData.id,
+              name: newPokemonData.name,
+              maxHP: getHP(newPokemonData),
+              currentHP: getHP(newPokemonData),
+              alive: true,
+            };
 
-          if (!enemy.alive) {
-            enemy = newPokemon;
-            enemiesArray[0] = enemy;
-            document.querySelector("#enemy-name-txt").textContent = enemy.name;
-            document.querySelector(
-              "#enemy-health-txt"
-            ).textContent = `HP: ${enemy.currentHP}`;
-          } else if (!myPokemon.alive) {
-            myPokemon = newPokemon;
-            myPokemonsArray[0] = myPokemon;
-            document.querySelector("#my-pokemon-name").textContent =
-              myPokemon.name;
-            document.querySelector(
-              "#my-pokemon-health-txt"
-            ).textContent = `HP: ${myPokemon.currentHP}`;
+            if (!enemy.alive) {
+              enemy = newPokemon;
+              enemiesArray[0] = enemy;
+              document.querySelector("#enemy-name-txt").textContent =
+                enemy.name;
+              document.querySelector(
+                "#enemy-health-txt"
+              ).textContent = `HP: ${enemy.currentHP}`;
+            } else if (!myPokemon.alive) {
+              myPokemon = newPokemon;
+              myPokemonsArray[0] = myPokemon;
+              document.querySelector("#my-pokemon-name").textContent =
+                myPokemon.name;
+              document.querySelector(
+                "#my-pokemon-health-txt"
+              ).textContent = `HP: ${myPokemon.currentHP}`;
+            }
+          } catch (error) {
+            console.error("Klarte ikke laste ny Pokemon/fiende", error);
           }
-        } catch (error) {
-          console.error("Klarte ikke laste ny Pokemon/fiende", error);
         }
       }
 
