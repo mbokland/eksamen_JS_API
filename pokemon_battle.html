@@ -58,7 +58,7 @@
         </div>
         <div id="my2-pokemon-health-container">
           <div class="healthbar-container">
-            <div class="healthbar my-pokemon-health"></div>
+            <div class="healthbar my2-pokemon-health"></div>
             <div class="text-container">
               <p id="my-pokemon-name">Min Pokémons navn</p>
               <p id="my-pokemon-health-txt"></p>
@@ -67,7 +67,7 @@
         </div>
         <div id="my3-pokemon-health-container">
           <div class="healthbar-container">
-            <div class="healthbar my-pokemon-health"></div>
+            <div class="healthbar my3-pokemon-health"></div>
             <div class="text-container">
               <p id="my-pokemon-name">Min Pokémons navn</p>
               <p id="my-pokemon-health-txt"></p>
@@ -316,6 +316,22 @@
           console.error("Feil ved oppdatering av navn på Pokemon", error);
         }
       }
+
+      //Hardkode fiende 2 og 3
+      const getEnemy2 = document.querySelector(
+        "enemy2-health-container .enemy-container second-enemy"
+      );
+      const getEnemy3 = document.querySelector(
+        "enemy3-health-container .enemy-container third-enemy"
+      );
+
+      //Hardkode myPokemon 2 og 3
+      const getMyPokemon2 = document.querySelector(
+        "myPokemon2-health-container .mp-container second-mp"
+      );
+      const getMyPokemon3 = document.querySelector(
+        "myPokemon3-health-container .mp-container third-mp"
+      );
 
       //hente inn attack-container og skills
       const myPokemonContainer = document.querySelector(".my-attack-container");
