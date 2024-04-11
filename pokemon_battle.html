@@ -98,18 +98,24 @@
           const myPokemonId = randomPokemonData[1].id;
 
           const enemyImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${enemyId}.png`;
-
           const myPokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${myPokemonId}.png`;
 
-          const enemyContainer = document.querySelector(
+          const enemyContainer = document.querySelectorAll(
             ".enemy-container .img-container.enemy"
           );
-          enemyContainer.innerHTML = `<img src="${enemyImgUrl}" alt="Fiendens bilde">`;
 
-          const myPokemonContainer = document.querySelector(
+          const myPokemonContainer = document.querySelectorAll(
             ".my-pokemon-container .img-container"
           );
-          myPokemonContainer.innerHTML = `<img src="${myPokemonImgUrl}" alt="Din Pokemons bilde">`;
+
+          for (let i = 0; i < 3; i++) {
+            enemyContainer[
+              i
+            ].innerHTML = `<img src="${enemyImgUrl}" alt="Fiendens bilde">`;
+            myPokemonContainer[
+              i
+            ].innerHTML = `<img src="${myPokemonImgUrl}" alt="Din Pokemons bilde">`;
+          }
         } catch (error) {
           console.error("Feil ved lasting av bilde", error);
         }
@@ -156,6 +162,7 @@
       async function showPokemonImages() {
         try {
           await fetchPokemonImg();
+          addPokemonNameData();
         } catch (error) {
           console.error("Kunne ikke laste inn bilder", error);
         }
