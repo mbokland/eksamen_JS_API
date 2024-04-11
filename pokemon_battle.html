@@ -76,14 +76,22 @@
         console.log("Inne i fetchRandomPokemon");
         try {
           const randomPokemon = [];
-          for (let i = 0; i < 3; i++) {
-            const randomPokemonId = Math.floor(Math.random() * 250) + 1;
-            const randomPokemonRequest = await fetch(
-              "https://pokeapi.co/api/v2/pokemon/" + randomPokemonId
+          for (let i = 0; i < 6; i++) {
+            const randomEnemyId = Math.floor(Math.random() * 100) + 1;
+            const randomMyPokemonId = Math.floor(Math.random() * 100) + 101;
+
+            const enemyRequest = await fetch(
+              "https://pokeapi.co/api/v2/pokemon/" + randomEnemyId
             );
-            const randomPokemonData = await randomPokemonRequest.json();
-            randomPokemonData.id = randomPokemonId;
-            randomPokemon.push(randomPokemonData);
+            const enemyData = await enemyRequest.json();
+            enemyData.id = randomEnemyId;
+            randomPokemon.push(enemyData);
+            const myPokemonRequest = await fetch(
+              "https://pokeapi.co/api/v2/pokemon/" + randomMyPokemonId
+            );
+            const myPokemonData = await myPokemonRequest.json();
+            myPokemonData.id = randomMyPokemonId;
+            randomPokemon.push(myPokemonData);
           }
 
           return randomPokemon;
@@ -96,7 +104,7 @@
         try {
           const randomPokemonData = await fetchRandomPokemon();
 
-          for (let i = 0; i < 3; i++) {
+          for (let i = 0; i < 6; i++) {
             const enemyId = randomPokemonData[i].id;
             const myPokemonId = randomPokemonData[i].id;
 
@@ -168,6 +176,7 @@
       async function addPokemonNameData() {
         try {
           const randomPokemon = await fetchRandomPokemon();
+
           const enemyData = await fetchRandomPokemonData(randomPokemon[0].id);
           const myPokemonData = await fetchRandomPokemonData(
             randomPokemon[1].id
