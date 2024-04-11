@@ -393,6 +393,7 @@
       }
 
       function displayPokemons(pokemons) {
+        const imgContainer = document.querySelector(`.img-container`);
         showAllPokemon.innerHTML = "";
         const selectedIndexes = [];
         while (selectedIndexes.length < 4) {
@@ -404,8 +405,50 @@
           }
         }
       }
+      function moveNewPokemons() {
+        const myPokemonContainer = document.querySelectorAll(`.pokemon-card`);
+
+        myPokemonContainer.forEach((myPokemonContainer, index) => {
+          const imageUrl = myPokemonContainer.dataset.imageUrl;
+          let newPositionX, newPositionY;
+          switch (index) {
+            case 0:
+              newPositionX = 100;
+              newPositionY = 200;
+              break;
+            case 1:
+              newPositionX = 300;
+              newPositionY = 100;
+              break;
+            case 2:
+              newPositionX = 100;
+              newPositionY = 300;
+              break;
+            case 3:
+              newPositionX = 300;
+              newPositionY = 300;
+              break;
+            default:
+              newPositionX = 0;
+              newPositionY = 0;
+              break;
+          }
+
+          myPokemonContainer.style.position = "absolute";
+          myPokemonContainer.style.left = `${newPositionX}px`;
+          myPokemonContainer.style.top = `${newPositionY}px`;
+          const img = document.createElement("img");
+          img.src = imageUrl;
+          myPokemonContainer.appendChild(img);
+        });
+      }
+      moveNewPokemons();
+      //STYLE and Move images
+
+      const pokemonCard = [];
 
       function createPokemonCard(pokemon) {
+        console.log("inne i card");
         //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
         const pokemonNumber = pokemon.id;
         //Link til pokeAPIets github med bilderessurser
@@ -425,8 +468,11 @@
         const imgCard = document.createElement("img");
         imgCard.src = pokemonImageUrl;
         pokemonCard.appendChild(imgCard);
+        imgCard.style.position = "flex";
+        imgCard.style.flexWrap = "wrap";
 
         return pokemonCard;
+        pokemonCards.push(pokemonCard);
       }
       fetchPokemon();
 
