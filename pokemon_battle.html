@@ -54,10 +54,21 @@
     </div>
 
     <script>
+      async function startGame() {
+        try {
+          await showPokemonImages();
+          await addPokemonNameData();
+          await saveEnemyMoves();
+          await addDataToArrays();
+        } catch (error) {
+          console.error("Feil ved oppstart av spillet:", error);
+        }
+      }
       let enemiesArray = [];
       let myPokemonsArray = [];
       let pokemonId;
       let enemy;
+      let myPokemon;
 
       async function fetchRandomPokemon() {
         console.log("Inne i fetchRandomPokemon");
@@ -115,12 +126,16 @@
         }
       }
 
+      fetchedStat = [];
+
       async function fetchStatsFromApi(pokemonId) {
         try {
           const pokemonStatsDataRequest = await fetch(
             `https://pokeapi.co/api/v2/stat/`
           );
           const stats = await pokemonStatsDataRequest.json();
+
+          fetchedStat = stats;
 
           return stats;
         } catch (error) {
@@ -156,8 +171,14 @@
             randomPokemon[1].id
           );
 
-          const enemyHP = getHP(enemyData);
-          const myPokemonHP = getHP(myPokemonData);
+          fetchStatsFromApi();
+
+          const enemyHP = fetchedStat.find(
+            (stat) => stat.name === "hp"
+          ).base_stat;
+          const myPokemonHP = fetchedStat.find(
+            (stat) => stat.name === "hp"
+          ).base_stat;
 
           document.querySelector("#enemy-name-txt").innerHTML =
             randomPokemon[0].name;
@@ -467,7 +488,7 @@
           console.error("Klarte ikke laste ny Pokemon/fiende", error);
         }
       }
-
+      startGame();
       showPokemonImages();
       addPokemonNameData();
       saveEnemyMoves();
