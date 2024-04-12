@@ -135,13 +135,6 @@
           }
           //Returnerer tilfeldige Pokémons der funksjonen blir kalt
           return randomPokemon;
-
-          /* DENNE SKAL SLETTES 
-          randomPokemon.forEach((pokemon) => {
-            const imgElement = document.getElementById();
-            imgElement.style.border = "2px solid black";
-            imgElement.style.borderRadius = "50%";
-          });*/
         } catch (error) {
           //Fanger opp hvis noe er galt med funksjonen, "(error) gir tilbakemelding om nøyaktig problem ved koden, dersom kalt på i console.error"
           console.error("Feil ved innlastning av Random Pokemon!", error);
@@ -190,20 +183,6 @@
         }
       }
 
-      /* DENNE SKAL SLETTES
-      async function fetchStatsFromApi(pokemonId) {
-        try {
-          const pokemonStatsDataRequest = await fetch(
-            `https://pokeapi.co/api/v2/stat/`
-          );
-          const stats = await pokemonStatsDataRequest.json();
-
-          return stats;
-        } catch (error) {
-          console.error("Klarte ikke hente stats fra API", error);
-        }
-      }*/
-
       //Henter inn "cheri" som gir BOOST istedetfor DAMAGE
       async function fetchBerries() {
         try {
@@ -216,6 +195,89 @@
           console.error("klarte ikke fetche berry", error);
         }
       }
+      //Henter inn container til alle innhentede PokémonCards, for å style de til flex-row
+      //FLYTT DENNE KODEN SAMMEN MED FETCHPOKEMON OG DISPLAYPOKEMON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      const showAllPokemon = document.querySelector("#show-all-pokemon");
+      showAllPokemon.style.display = "flex";
+
+      //Henter inn de 4 ekstra pokemon fra APIet (som ikke deltar i spillet)
+      async function fetchPokemon() {
+        try {
+          const pokemonRequest = await fetch(
+            "https://pokeapi.co/api/v2/pokemon/?limit=50"
+          );
+
+          const result = await pokemonRequest.json();
+          const pokemonUrls = result.results.map((pokemon) => pokemon.url);
+          const pokemonData = await Promise.all(
+            pokemonUrls.map((url) =>
+              fetch(url).then((response) => response.json())
+            )
+          );
+          allPokemons = pokemonData;
+          displayPokemons(allPokemons);
+        } catch (error) {
+          console.error("Oisann! Klarte ikke å laste inn Pokémon!", error);
+
+          const pokemonData = Promise.all(
+            pokemonUrls.map((url) =>
+              fetch(url).then((response) => response.json())
+            )
+          );
+          const allPokemons = pokemonData;
+        }
+      }
+
+      //henter info fra "pokemons"-array, og oppretter fire forskjellige Pokémons-kort ved å bruke createPokemonCard-funksjonen og viser dem på nettsiden, mens de resterende 46 fjernes.
+      function displayPokemons(pokemons) {
+        const imgContainer = document.querySelector(`.img-container`);
+        showAllPokemon.innerHTML = "";
+        const selectedIndexes = [];
+        while (selectedIndexes.length < 4) {
+          const randomIndex = Math.floor(Math.random() * pokemons.length);
+          if (!selectedIndexes.includes(randomIndex)) {
+            const pokemonCard = createPokemonCard(pokemons[randomIndex]);
+            showAllPokemon.appendChild(pokemonCard);
+            selectedIndexes.push(randomIndex);
+          }
+        }
+      }
+
+      function createPokemonCard(pokemon) {
+        //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
+        const pokemonNumber = pokemon.id;
+        //Link til pokeAPIets github med bilderessurser
+        const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
+
+        //lager ny div med informasjonen fra APIet
+        //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
+        const pokemonCard = document.createElement("div");
+        pokemonCard.innerHTML = `
+           <p>Navn: ${pokemon.name}</p>
+           <p>HP: ${getHP(pokemon)}</p>
+           `;
+        pokemonCard.style.width = "110px";
+        pokemonCard.style.display = "flex";
+        pokemonCard.style.flexDirection = "column";
+        pokemonCard.style.backgroundColor = "lightgreen";
+        pokemonCard.style.border = "1px solid white";
+        pokemonCard.style.margin = "4px";
+
+        //legge til nytt element(bilde)
+        const imgCard = document.createElement("img");
+
+        imgCard.src = pokemonImageUrl;
+        pokemonCard.appendChild(imgCard);
+        imgCard.style.display = "flex";
+        imgCard.style.alignItems = "center";
+        imgCard.style.top = "350px";
+        imgCard.style.right = "200px";
+        imgCard.style.width = " 80%";
+
+        pokemonCard.appendChild(imgCard);
+        return pokemonCard;
+      }
+      fetchPokemon();
 
       //Tar i bruk bildene som ble hentet fra APIet i "fetchPokemonImg-funksjon"
       async function showPokemonImages() {
@@ -344,107 +406,6 @@
           console.error("Feil ved oppdatering av navn på Pokemon", error);
         }
       }
-      /* SLETTES!
-      //Hardkode fiende 2 og 3
-      const getEnemy2 = document.querySelector(
-        "#enemy2-health-container .enemy-container.second-enemy"
-      );
-
-      const getEnemy3 = document.querySelector(
-        "#enemy3-health-container .enemy-container.third-enemy"
-      );
-
-      //Hardkode myPokemon 2 og 3
-      const getMyPokemon2 = document.querySelector(
-        "#my2-pokemon-health-container .my2-pokemon-container.second-mp"
-      );
-      const getMyPokemon3 = document.querySelector(
-        "#my3-pokemon-health-container .my-pokemon-container.third-mp"
-      ); */
-
-      //Henter inn container til alle innhentede PokémonCards, for å style de til flex-row
-      //FLYTT DENNE KODEN SAMMEN MED FETCHPOKEMON OG DISPLAYPOKEMON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      const showAllPokemon = document.querySelector("#show-all-pokemon");
-      showAllPokemon.style.display = "flex";
-
-      //Henter inn de 4 ekstra pokemon fra APIet (som ikke deltar i spillet)
-      async function fetchPokemon() {
-        try {
-          const pokemonRequest = await fetch(
-            "https://pokeapi.co/api/v2/pokemon/?limit=50"
-          );
-
-          const result = await pokemonRequest.json();
-          const pokemonUrls = result.results.map((pokemon) => pokemon.url);
-          const pokemonData = await Promise.all(
-            pokemonUrls.map((url) =>
-              fetch(url).then((response) => response.json())
-            )
-          );
-          allPokemons = pokemonData;
-          displayPokemons(allPokemons);
-        } catch (error) {
-          console.error("Oisann! Klarte ikke å laste inn Pokémon!", error);
-
-          const pokemonData = Promise.all(
-            pokemonUrls.map((url) =>
-              fetch(url).then((response) => response.json())
-            )
-          );
-          const allPokemons = pokemonData;
-        }
-      }
-
-      //henter info fra "pokemons"-array, og oppretter fire forskjellige Pokémons-kort ved å bruke createPokemonCard-funksjonen og viser dem på nettsiden, mens de resterende 46 fjernes.
-      function displayPokemons(pokemons) {
-        const imgContainer = document.querySelector(`.img-container`);
-        showAllPokemon.innerHTML = "";
-        const selectedIndexes = [];
-        while (selectedIndexes.length < 4) {
-          const randomIndex = Math.floor(Math.random() * pokemons.length);
-          if (!selectedIndexes.includes(randomIndex)) {
-            const pokemonCard = createPokemonCard(pokemons[randomIndex]);
-            showAllPokemon.appendChild(pokemonCard);
-            selectedIndexes.push(randomIndex);
-          }
-        }
-      }
-
-      function createPokemonCard(pokemon) {
-        //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
-        const pokemonNumber = pokemon.id;
-        //Link til pokeAPIets github med bilderessurser
-        const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
-
-        //lager ny div med informasjonen fra APIet
-        //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
-        const pokemonCard = document.createElement("div");
-        pokemonCard.innerHTML = `
-           <p>Navn: ${pokemon.name}</p>
-           <p>HP: ${getHP(pokemon)}</p>
-           `;
-        pokemonCard.style.width = "110px";
-        pokemonCard.style.display = "flex";
-        pokemonCard.style.flexDirection = "column";
-        pokemonCard.style.backgroundColor = "lightgreen";
-        pokemonCard.style.border = "1px solid white";
-        pokemonCard.style.margin = "4px";
-
-        //legge til nytt element(bilde)
-        const imgCard = document.createElement("img");
-
-        imgCard.src = pokemonImageUrl;
-        pokemonCard.appendChild(imgCard);
-        imgCard.style.display = "flex";
-        imgCard.style.alignItems = "center";
-        imgCard.style.top = "350px";
-        imgCard.style.right = "200px";
-        imgCard.style.width = " 80%";
-
-        pokemonCard.appendChild(imgCard);
-        return pokemonCard;
-      }
-      fetchPokemon();
 
       //hente inn attack-container og skills
       const myPokemonContainer = document.querySelector(".my-attack-container");
