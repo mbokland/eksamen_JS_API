@@ -561,26 +561,31 @@
           const damage = generateRandomDamage(5, 20);
           const enemyImg = document.querySelector(".img-container.enemy img");
 
-          //Skaden skal brukes i myPokemonAttack
-          myPokemonAttack();
+          //Sjekker om pokemon er i live før angrep
+          if (myPokemon.alive && enemy.alive) {
+            //Skaden skal brukes i myPokemonAttack
+            myPokemonAttack();
 
-          //Bestemmer hva som skal skje dersom en IKKE Trykker på chery
-          if (selectedSkill !== "skill 4") {
-            enemy.currentHP -= damage;
+            //Bestemmer hva som skal skje dersom en IKKE Trykker på chery
+            if (selectedSkill !== "skill 4") {
+              enemy.currentHP -= damage;
 
-            alert(
-              `${myPokemon.name} bruker ${selectedSkill}, og forårsaker ${damage} HP skade på ${enemy.name}.`
-            );
-            document.querySelector(
-              "#enemy-health-txt"
-            ).textContent = `HP: ${enemy.currentHP}`;
-            //Hvis cherry blir trykket skal useCherryfunksjon kalles opå
+              alert(
+                `${myPokemon.name} bruker ${selectedSkill}, og forårsaker ${damage} HP skade på ${enemy.name}.`
+              );
+              document.querySelector(
+                "#enemy-health-txt"
+              ).textContent = `HP: ${enemy.currentHP}`;
+              //Hvis cherry blir trykket skal useCherryfunksjon kalles opå
+            } else {
+              useCherry();
+            }
+
+            //Motangrep skjer etter at myPokemon har angrepet
+            counterAttack();
           } else {
-            useCherry();
+            alert("Kampen er over!");
           }
-
-          //Motangrep skjer etter at myPokemon har angrepet
-          counterAttack();
 
           //Alerts for game over. Her kunne spillet blitt deaktivert med egen funksjon, dersom en av de er !.alive
           //Hvis min Pokémon beseirer fienden, skal alert "Gratulerer.." komme opp
