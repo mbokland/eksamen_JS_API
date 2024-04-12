@@ -518,9 +518,13 @@
             id: enemyData.id,
             name: enemyData.name,
             maxHP: enemyHP,
-            currentHP: myPokemonHP,
+            currentHP: enemyHP,
             alive: true,
           };
+
+          document.querySelector(
+            "#enemy-name-txt"
+          ).textContent = `${enemy.name}`;
 
           enemiesArray.push(enemy);
 
@@ -531,6 +535,10 @@
             currentHP: myPokemonHP,
             alive: true,
           };
+
+          document.querySelector(
+            "#my-pokemon-name"
+          ).textContent = `${myPokemon.name}`;
         } catch (error) {
           console.error("Klarte ikke legge til i Arrays", error);
         }
