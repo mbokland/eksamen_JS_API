@@ -530,8 +530,6 @@
             currentHP: myPokemonHP,
             alive: true,
           };
-
-          myPokemonsArray.push(myPokemon);
         } catch (error) {
           console.error("Klarte ikke legge til i Arrays", error);
         }
@@ -584,6 +582,9 @@
             if (enemy.alive && !myPokemon.alive) {
               alert("Du er blitt beseiret!");
             }
+          } //sjekker om noen er i live, dersom en eller begge er død skal "GAME OVER" komme
+          if (!enemy.alive || !myPokemon.alive) {
+            alert("GAME OVER");
           }
         });
 
@@ -605,7 +606,7 @@
         });
       });
 
-      //Definerer hvor endring skal skje når min Pokémon angriper
+      //Sier hva som skal skje når min Pokémon angriper
       async function myPokemonAttack() {
         try {
           const myPokemonImage = document.querySelector(
@@ -616,23 +617,20 @@
         }
       }
 
-      //Definerer hva som skal skje når fienden angriper
       async function counterAttack() {
         try {
-          if (enemy.alive) {
-            const damage = generateRandomDamage(5, 15);
-            myPokemon.currentHP -= damage;
-            alert(
-              `Fienden angriper og forårsaker ${damage} HP skade. ${myPokemon.name} har nå ${myPokemon.currentHP} igjen`
-            );
-          }
-          //Hvis fienden er beseiret skal bildet forsvinne og alert oppstå
           if (enemy.currentHP <= 0) {
             enemy.alive = false;
             alert("Fiendens Pokémon har ingen HP igjen!");
             const enemyImage = document.querySelector(".enemy-container");
             enemyImage.remove();
           }
+          const damage = generateRandomDamage(5, 15);
+          myPokemon.currentHP -= damage;
+
+          alert(
+            `Fienden angriper og forårsaker ${damage} HP skade. ${myPokemon.name} har nå ${myPokemon.currentHP} igjen`
+          );
 
           document.querySelector(
             "#my-pokemon-health-txt"
