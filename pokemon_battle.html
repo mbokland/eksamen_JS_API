@@ -346,33 +346,6 @@
       const getMyPokemon3 = document.querySelector(
         "#my3-pokemon-health-container .my-pokemon-container.third-mp"
       );
-      /*
-       async function fetchAndUpdatePokemon(containerElement) {
-         try {
-           console.log("inne i fetchAndUptate");
-           const randomPokemonData = await fetchRandomPokemon(); // Hent tilfeldige Pokémon-data
-           const pokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${randomPokemonData.id}.png`;
-
-           // Oppdater innholdet i containerElement med Pokémon-dataene
-           containerElement
-             .querySelectorAll(".my-pokemon-health-txt")
-             .forEach((nameElement) => {
-               nameElement.textContent = randomPokemonData.name;
-             });
-           containerElement.querySelectorAll(".img-container").src =
-             pokemonImgUrl;
-           containerElement.querySelectorAll(
-             ".my-pokemon-health-txt"
-           ).textContent = `HP: ${randomPokemonData.hp}`;
-         } catch (error) {
-           console.error("Feil ved lasting av Pokémon-data", error);
-         }
-       }
-
-
-       // Bruk funksjonen for å oppdatere fiende 2 og min Pokémon 2
-       fetchAndUpdatePokemon([getEnemy2, getMyPokemon2]);
-       console.log(fetchAndUpdatePokemon);*/
 
       const showAllPokemon = document.querySelector("#show-all-pokemon");
       showAllPokemon.style.display = "flex";
@@ -694,29 +667,9 @@
             );
             myPokemonImage.remove();
           }
-          /*
-          const randomIndex = Math.floor(Math.random() * randomPokemon.length);
-          const enemyPokemon = randomPokemon[randomIndex];
-          const myPokemon =
-            randomPokemon[Math.floor(Math.random() * randomPokemon.length)];*/
         } catch (error) {
           console.error("Klarte ikke generere motangrep", error);
         }
-
-        /*
-             function enemyAttack() {
-               if (parseInt(enemy.currentHP) <= 0) {
-                 enemy.alive = false;
-                 const selectedEnemy = document.querySelectorAll(
-                   `.img-container .enemy`
-                 );
-                 if (selectedEnemy.length > 0) {
-                   selectedEnemy.forEach((pokemon) => pokemon.remove());
-                 }
-                 alert(`Dine Pokémons har ingen HP igjen, spillet er tapt!`);
-                 replaceFaintedPokemon();
-               }
-             }*/
 
         async function replaceFaintedPokemon() {
           try {
