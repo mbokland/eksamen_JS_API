@@ -239,9 +239,18 @@
             `Er du sikker på at du vil slette ${pokemon.name}?`
           );
           if (confirmDelete) {
-            const index = savedPokemons.findIndex((p) => p.id === pokemon.id);
-            if (index !== -1) {
-              savedPokemons.splice(index, 1);
+            const indexAllPokemons = allPokemons.findIndex(
+              (p) => p.id === pokemon.id
+            );
+            if (indexAllPokemons !== -1) {
+              allPokemons.splice(indexAllPokemons, 1);
+              displayPokemons(allPokemons);
+            }
+            const indexSavedPokemons = savedPokemons.findIndex(
+              (p) => p.id === pokemon.id
+            );
+            if (indexSavedPokemons !== -1) {
+              savedPokemons.splice(indexSavedPokemons, 1);
               localStorage.setItem(
                 "savedPokemons",
                 JSON.stringify(savedPokemons)
