@@ -112,7 +112,6 @@
     <script>
       let enemiesArray = [];
       let myPokemonsArray = [];
-      let pokemonId;
       let enemy;
 
       async function fetchRandomPokemon() {
@@ -133,10 +132,7 @@
           return randomPokemon;
 
           randomPokemon.forEach((pokemon) => {
-            const uniqueId = `pokemon-${pokemon.name.toLowerCase()}-${
-              pokemon.id
-            }`;
-            const imgElement = document.getElementById(uniqueId);
+            const imgElement = document.getElementById();
             imgElement.style.border = "2px solid black";
             imgElement.style.borderRadius = "50%";
           });
@@ -440,8 +436,6 @@
         //Link til pokeAPIets github med bilderessurser
         const pokemonImageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonNumber}.png`;
 
-        const pokemonType = pokemon.types[0].type.name;
-
         //lager ny div med informasjonen fra APIet
         //pokemonData.name brukes for å få opp navnet, types for å få typen. Bruke array 0 for å få første typen, ikke alle.
         const pokemonCard = document.createElement("div");
@@ -458,7 +452,6 @@
 
         //legge til nytt element(bilde)
         const imgCard = document.createElement("img");
-        const uniqueId = `pokemon-${pokemon.name.toLowerCase()}-${pokemonNumber}`;
 
         imgCard.src = pokemonImageUrl;
         pokemonCard.appendChild(imgCard);
