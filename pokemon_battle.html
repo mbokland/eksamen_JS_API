@@ -617,7 +617,7 @@
         });
       });
 
-      //Sier hva som skal skje når min Pokémon angriper
+      //Definerer hvilke pokemon som blir berørt ved angrep
       async function myPokemonAttack() {
         try {
           const myPokemonImage = document.querySelector(
@@ -628,6 +628,7 @@
         }
       }
 
+      //Definerer hva som skal skje når fienden angriper tilbake
       async function counterAttack() {
         try {
           if (enemy.currentHP <= 0) {
@@ -660,9 +661,9 @@
         }
       }
 
+      //Kaller på funksjoner
       showPokemonImages();
       addPokemonNameData();
-      saveEnemyMoves();
       addDataToArrays();
     </script>
   </body>
