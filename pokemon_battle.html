@@ -136,8 +136,8 @@
             imgElement.style.border = "2px solid black";
             imgElement.style.borderRadius = "50%";
           });
-        } catch {
-          console.error("Feil ved innlastning av Random Pokemon!");
+        } catch (error) {
+          console.error("Feil ved innlastning av Random Pokemon!", error);
         }
       }
 
