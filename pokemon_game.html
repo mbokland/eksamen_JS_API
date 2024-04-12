@@ -276,12 +276,13 @@
               (p) => p.id === selectedPokemon.id
             );
             if (savedIndex !== -1) {
-              savedPokemons[index] = selectedPokemon;
+              savedPokemons[savedIndex] = selectedPokemon;
 
               localStorage.setItem(
                 "savedPokemons",
                 JSON.stringify(savedPokemons)
               );
+              displaySavedPokemons();
             }
           }
         }
