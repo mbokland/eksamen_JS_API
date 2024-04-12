@@ -7,8 +7,9 @@
   </head>
   <body>
     <h1>Pokemonoversikt</h1>
-
+    <!--knapp fjerne filter-->
     <button id="clear-filter">Fjern filter</button>
+    <!--Div  med filterknapper og teksten som skal være inni-->
     <div id="filter-buttons"></div>
     <h2>Lag din egen Pokémon!</h2>
     <input
@@ -28,6 +29,7 @@
     <div id="saved-pokemon-card"></div>
 
     <script>
+      //DOMContentLoaded for å sikre at alt innhold på siden er lastet inn
       document.addEventListener("DOMContentLoaded", function () {
         //Her hentes div ifra HTML
         const showAllPokemon = document.querySelector("#show-all-pokemon");
@@ -45,14 +47,16 @@
             const pokemonRequest = await fetch(
               "https://pokeapi.co/api/v2/pokemon/?limit=50"
             );
-
+            //gjør responsen fra API om til JSON.format (ryddig format)
             const result = await pokemonRequest.json();
+            //Lager variabel som inneholder url til pokemondata. Iterer gjennom hvert Pokemon i Arrayet og returnerer som element i pokemonUrls
             const pokemonUrls = result.results.map((pokemon) => pokemon.url);
             const pokemonData = await Promise.all(
               pokemonUrls.map((url) =>
                 fetch(url).then((response) => response.json())
               )
             );
+            //viser til felles array
             allPokemons = pokemonData;
             displayPokemons(allPokemons);
             fetchPokemonTypes();
@@ -60,7 +64,7 @@
             console.error("Oisann! Klarte ikke å laste inn Pokémon!");
           }
         }
-
+        //sletter innhold på siden og iterer gjennom med ForEach, lager nytt kort og appender til showALlPokemon
         function displayPokemons(pokemons) {
           showAllPokemon.innerHTML = "";
           pokemons.forEach((pokemon) => {
@@ -134,6 +138,7 @@
             editPokemon(pokemon);
           });
 
+          //legger knapper til hvert kort som oppdateres.
           pokemonCard.appendChild(saveBtn);
           pokemonCard.appendChild(deleteBtn);
           pokemonCard.appendChild(editBtn);
@@ -144,7 +149,9 @@
 
         //FILTER
 
+        //Array å legge alle pokemons typer inni
         let allPokemonTypes = [];
+        //bakgrunnsfarger basert på type
         const typeColors = {
           normal: `#E4BFC9`,
           fighting: `#EF9E87`,
@@ -166,12 +173,14 @@
           fairy: `#EBACC5`,
         };
 
+        //Henter pokemon fra API
         async function fetchPokemonTypes() {
           try {
             const fetchTypesRequest = await fetch(
               "https://pokeapi.co/api/v2/type"
             );
             const pokemonTypeData = await fetchTypesRequest.json();
+            //SLICE oppretter en ny kopi av arrayet, viser frem 18 typer
             allPokemonTypes = pokemonTypeData.results.slice(0, 18);
             createFilterBtn(allPokemonTypes);
           } catch (error) {
@@ -179,6 +188,7 @@
           }
         }
 
+        //Filtrerer etter type og henter første [0] type i APIet
         async function fetchPokemonByType(typeName) {
           const filteredPokemons = allPokemons.filter((pokemon) => {
             return pokemon.types[0].type.name === typeName;
@@ -187,25 +197,29 @@
           displayPokemons(filteredPokemons);
         }
 
+        //slette filter med knapp (eventlistener)
         const clearFilterBtn = document.getElementById("clear-filter");
         clearFilterBtn.addEventListener("click", () => {
           showAllPokemon.innerHTML = "";
           fetchPokemon();
         });
 
+        //Lagrer pokemon i localStorage
         async function savePokemon(pokemon) {
           try {
             savedPokemons =
               JSON.parse(localStorage.getItem("savedPokemons")) || [];
+            //Passer på å bare lagre 5 pokemon
             if (savedPokemons.length < 5) {
               savedPokemons.push(pokemon);
               localStorage.setItem(
                 "savedPokemons",
                 JSON.stringify(savedPokemons)
-              );
+              ); //Stringify brukes for å gjøre innhold om til en string, da localStorage bare kan håndtere strings
               await displaySavedPokemons();
             } else {
               alert(
+                //feilmelding dersom brukeren prøver å lagre flere enn 5 pokemon
                 "Du kan ikke lagre flere Pokemon! Vennligst slett en Pokemon for å fotsette"
               );
             }
@@ -214,41 +228,47 @@
           }
         }
 
+        //Viser frem lagrede pokemon
         function displaySavedPokemons() {
+          //Lagrer til et HTML-card som allerede er opprettet i HTML-strukturen
           const savedPokemonContainer =
             document.getElementById("saved-pokemon-card");
-          savedPokemonContainer.innerHTML = "";
+          savedPokemonContainer.innerHTML = ""; //Sletter gammelt så ikke det blir dobbelt opp
 
+          //Oppretter ny h3-tag ved hjelp av createElement. Appender til rett sted i koden
           const savedPokemonHeader = document.createElement("h3");
           savedPokemonHeader.textContent = "Mine lagrede Pokémons:";
           savedPokemonContainer.appendChild(savedPokemonHeader);
 
           savedPokemonHeader.style.width = "100%";
 
+          //Henter lagrede pokemons fra localstorage/array
           const savedPokemons =
             JSON.parse(localStorage.getItem("savedPokemons")) || [];
 
+          //Lager nytt kort av hver lagrede pokemon
           savedPokemons.forEach((pokemon, index) => {
             const savedPokemonCard = createPokemonCard(pokemon, index);
             savedPokemonContainer.appendChild(savedPokemonCard);
           });
         }
-
+        //sletteknapp
         function deletePokemon(pokemon) {
           const confirmDelete = confirm(
             `Er du sikker på at du vil slette ${pokemon.name}?`
           );
           if (confirmDelete) {
+            //finne indeden til Pokemon som skal slettes
             const indexAllPokemons = allPokemons.findIndex(
               (p) => p.id === pokemon.id
-            );
+            ); //index (pokemon) blir slettet dersom Pokemon ble funnet i allPokemons arrayet
             if (indexAllPokemons !== -1) {
-              allPokemons.splice(indexAllPokemons, 1);
+              allPokemons.splice(indexAllPokemons, 1); //Splice sletter
               displayPokemons(allPokemons);
-            }
+            } //savedPokemons blir slettet dersom den finnes i arrayet
             const indexSavedPokemons = savedPokemons.findIndex(
               (p) => p.id === pokemon.id
-            );
+            ); //sletter fra localstorage og oppdaterer localstorage
             if (indexSavedPokemons !== -1) {
               savedPokemons.splice(indexSavedPokemons, 1);
               localStorage.setItem(
@@ -260,18 +280,21 @@
             }
           }
         }
-
+        //endrePokemon ved prompt
         function editPokemon(selectedPokemon) {
           const newPokemonName = prompt("Skriv inn det nye navnet:");
           let newPokemonType = prompt("Skriv inn hvilken type den skal ha:");
 
+          //Sjekker at nytt navn og ny type er skrevet inn, og endrer selectedPokemon til newPokemonName
           if (newPokemonName && newPokemonType) {
             selectedPokemon.name = newPokemonName;
-            newPokemonType = newPokemonType.toLowerCase();
+            newPokemonType = newPokemonType.toLowerCase(); //toLowercase passer på at brukeren kan skrive med små og store bokstaver
 
+            //Endrer typen
             selectedPokemon.types[0].type.name = newPokemonType;
-            displayPokemons(allPokemons);
+            displayPokemons(allPokemons); //oppdaterer visning av pokemons
 
+            //Oppdaterer arrayet med ny informasjon
             const savedIndex = savedPokemons.findIndex(
               (p) => p.id === selectedPokemon.id
             );
@@ -285,15 +308,14 @@
             }
           }
         }
-
+        //henter lagrede pokemons fra localstorage og displayer på siden
         function loadSavedPokemons() {
           savedPokemons =
             JSON.parse(localStorage.getItem("savedPokemons")) || [];
           displaySavedPokemons();
         }
 
-        //create
-
+        //Knapp hentes fra div som oppdaterer informasjon skrevet i placeholder
         const createBtn = document.querySelector("#create-btn");
         createBtn.addEventListener("click", createPokemon);
 
@@ -302,6 +324,7 @@
 
           filterBtnContainer.innerHTML = ""; //Tømmer btn-container, så ikke knappene dobler seg
 
+          //for hver gang knappen trykkes skal nytt kort bli laget med ny informasjon
           pokemonTypes.forEach((type) => {
             const pokemonTypeBtn = document.createElement("button");
             pokemonTypeBtn.textContent = type.name;
@@ -312,6 +335,7 @@
           });
         }
 
+        //lage ny pokemon-funksjon
         function createPokemon() {
           const createPokemonName = document.querySelector(
             "#create-pokemon-name"
@@ -320,35 +344,25 @@
             "#create-pokemon-type"
           ).value;
 
+          //oppdaterer objektet med id (til bilde), navn og type
           const newPokemon = {
             id: createPokemonId++,
             name: createPokemonName,
             types: [{ type: { name: createPokemonType } }],
           };
 
+          //unshift legger til ny pokemon i starten i oversikten
           allPokemons.unshift(newPokemon);
           displayPokemons(allPokemons);
 
           savedPokemons.push(newPokemon);
           localStorage.setItem("savedPokemons", JSON.stringify(savedPokemons)); //Lagre ny pokemon i localstorage
         }
-
+        //genererer et tilfeldig bilde fra allePokemons, som brukes til å lage sin egen pokemon
         function getRandomImg() {
           const randomIndex = Math.floor(Math.random() * allPokemons.length);
           return createPokemonId[randomIndex];
         }
-        /*
-              function generateRandomId(pokemonNumber) {
-                const randomNumber = Math.floor(Math.random() * 500);
-                if (randomNumber !== pokemonNumber) {
-                  return randomNumber;
-                } else {
-                  return generateRandomId(pokemonNumber);
-                }
-              }*/
-
-        //styling av cards
-        const pokemonContainer = document.querySelector("#show-all-pokemon");
 
         fetchPokemon();
         loadSavedPokemons();
