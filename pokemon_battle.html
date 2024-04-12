@@ -654,39 +654,6 @@
         } catch (error) {
           console.error("Klarte ikke generere motangrep", error);
         }
-
-        async function replaceFaintedPokemon() {
-          try {
-            const newPokemonData = await fetchRandomPokemon();
-            const newPokemon = {
-              id: newPokemonData.id,
-              name: newPokemonData.name,
-              maxHP: getHP(newPokemonData),
-              currentHP: getHP(newPokemonData),
-              alive: true,
-            };
-
-            if (!enemy.alive) {
-              enemy = newPokemon;
-              enemiesArray[0] = enemy;
-              document.querySelector("#enemy-name-txt").textContent =
-                enemy.name;
-              document.querySelector(
-                "#enemy-health-txt"
-              ).textContent = `HP: ${enemy.currentHP}`;
-            } else if (!myPokemon.alive) {
-              myPokemon = newPokemon;
-              myPokemonsArray[0] = myPokemon;
-              document.querySelector("#my-pokemon-name").textContent =
-                myPokemon.name;
-              document.querySelector(
-                "#my-pokemon-health-txt"
-              ).textContent = `HP: ${myPokemon.currentHP}`;
-            }
-          } catch (error) {
-            console.error("Klarte ikke laste ny Pokemon/fiende", error);
-          }
-        }
       }
 
       showPokemonImages();
