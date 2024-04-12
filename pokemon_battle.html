@@ -110,10 +110,14 @@
     </div>
 
     <script>
+      //Lagre info om fiender og mine Pokémons, globalt for å brukes når som helst i koden
       let enemiesArray = [];
       let myPokemonsArray = [];
       let enemy;
+      const pokemonCard = [];
 
+      //Fetcher tilfeldige pokemon fra PokeAPI.co
+      //for-loop henter 3 pokemons, math.floor henter tilfeldige pokemons fra 0-250.plass i APIet.
       async function fetchRandomPokemon() {
         try {
           const randomPokemon = [];
@@ -124,35 +128,43 @@
               "https://pokeapi.co/api/v2/pokemon/" + randomPokemonId
             );
 
+            //Konverterer responsen fra API om til JSON-format og lagret i randomPokemonData-variabelen
             const randomPokemonData = await randomPokemonRequest.json();
             randomPokemon.push(randomPokemonData);
           }
-
+          //Returnerer tilfeldige Pokémons der funksjonen blir kalt
           return randomPokemon;
 
+          /* DENNE SKAL SLETTES 
           randomPokemon.forEach((pokemon) => {
             const imgElement = document.getElementById();
             imgElement.style.border = "2px solid black";
             imgElement.style.borderRadius = "50%";
-          });
+          });*/
         } catch (error) {
+          //Fanger opp hvis noe er galt med funksjonen, "(error) gir tilbakemelding om nøyaktig problem ved koden, dersom kalt på i console.error"
           console.error("Feil ved innlastning av Random Pokemon!", error);
         }
       }
 
+      //Funksjon som henter bilder av Pokémons fra API
       async function fetchPokemonImg() {
         try {
-          const randomPokemonData = await fetchRandomPokemon();
-          const enemyId = randomPokemonData[0].id;
+          const randomPokemonData = await fetchRandomPokemon(); //Henter inn RandomPokemon for å tilordne riktig Pokémon en ID
+          const enemyId = randomPokemonData[0].id; //skiller fiende og min Pokémon med hver sin plass i arrayet [0] og [1], slik at de ikke blir like
           const myPokemonId = randomPokemonData[1].id;
 
+          //Lenke til fiendens bilde (SPRITE)
           const enemyImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${enemyId}.png`;
 
+          //Lenge til min Pokémons bilde (SPRITE)
           const myPokemonImgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${myPokemonId}.png`;
 
+          //Konstaterer containers hvor bilder skal lagres. Hentes fra HTML-strukturen
           const enemyContainer = document.querySelector(
             ".enemy-container .img-container.enemy"
           );
+          //Setter inn bildet i HTML-strukturen
           enemyContainer.innerHTML = `<img src="${enemyImgUrl}" alt="Fiendens bilde">`;
 
           const myPokemonContainer = document.querySelector(
@@ -163,7 +175,7 @@
           console.error("Feil ved lasting av bilde", error);
         }
       }
-
+      //Henter inn Pokémons data som skal hentes inn senere i koden
       async function fetchRandomPokemonData(pokemonId) {
         try {
           const pokemonDataRequest = await fetch(
@@ -177,6 +189,7 @@
         }
       }
 
+      /* DENNE SKAL SLETTES
       async function fetchStatsFromApi(pokemonId) {
         try {
           const pokemonStatsDataRequest = await fetch(
@@ -188,8 +201,9 @@
         } catch (error) {
           console.error("Klarte ikke hente stats fra API", error);
         }
-      }
+      }*/
 
+      //Henter inn "cheri" som gir BOOST istedetfor DAMAGE
       async function fetchBerries() {
         try {
           const fetchBerriesRequest = await fetch(
@@ -202,6 +216,7 @@
         }
       }
 
+      //Tar i bruk bildene som ble hentet fra APIet i "fetchPokemonImg-funksjon"
       async function showPokemonImages() {
         try {
           await fetchPokemonImg();
@@ -210,6 +225,7 @@
         }
       }
 
+      // Funksjon som henter inn data fra flere funksjoner og behandler disse sammen. Her kunne jeg ha flyttet tilhørende kode til original-funksjonene (fetchRandomPokemon og fetchRandomPokemonData)
       async function addPokemonNameData() {
         try {
           const randomPokemon = await fetchRandomPokemon();
@@ -221,6 +237,7 @@
           const enemyHP = getHP(enemyData);
           const myPokemonHP = getHP(myPokemonData);
 
+          //Henter inn div-en som NAVN og HP skal vises i.
           document.querySelector("#enemy-name-txt").innerHTML =
             randomPokemon[0].name;
           document.querySelector(
@@ -303,7 +320,7 @@
             .slice(0, 3)
             .map((move) => move.move.name);
 
-          //EnemyMoves skal lagres skjult
+          //Lagrer fiendens 4 moves (til evt. å spesifisere damage basert på move).
           const skillItems = document.querySelectorAll("#skills-list .skill");
           const enemyMoves = enemyData.moves
             .slice(0, 4)
@@ -313,18 +330,20 @@
             item.textContent = myPokemonMoves[index];
           });
 
+          //Henter data om berries fra API, sjekker at Berry har results som har verdi/lengde mer enn 0, før det returneres i "skills-list" tekstfelt nr. 4 ([3])
           const berryData = await fetchBerries();
           if (berryData && berryData.results && berryData.results.length > 0) {
             const berryName = berryData.results[0].name;
             skillItems[3].textContent = berryName;
           }
 
+          //returnerer for å gi tilang til verdiene, utenfor funksjonen. Konstatert lenger oppe i funksjonen, returnert nederst for å sikre at alt som skal returneres er lest
           return { enemyHP, myPokemonHP };
         } catch (error) {
           console.error("Feil ved oppdatering av navn på Pokemon", error);
         }
       }
-
+      /* SLETTES!
       //Hardkode fiende 2 og 3
       const getEnemy2 = document.querySelector(
         "#enemy2-health-container .enemy-container.second-enemy"
@@ -340,11 +359,14 @@
       );
       const getMyPokemon3 = document.querySelector(
         "#my3-pokemon-health-container .my-pokemon-container.third-mp"
-      );
+      ); */
 
+      //Henter inn container til alle innhentede PokémonCards, for å style de til flex-row
+      //FLYTT DENNE KODEN SAMMEN MED FETCHPOKEMON OG DISPLAYPOKEMON!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       const showAllPokemon = document.querySelector("#show-all-pokemon");
       showAllPokemon.style.display = "flex";
 
+      //Henter inn de 4 ekstra pokemon fra APIet (som ikke deltar i spillet)
       async function fetchPokemon() {
         try {
           const pokemonRequest = await fetch(
@@ -372,6 +394,7 @@
         }
       }
 
+      //henter info fra "pokemons"-array, og oppretter fire forskjellige Pokémons-kort ved å bruke createPokemonCard-funksjonen og viser dem på nettsiden, mens de resterende 46 fjernes.
       function displayPokemons(pokemons) {
         const imgContainer = document.querySelector(`.img-container`);
         showAllPokemon.innerHTML = "";
@@ -385,10 +408,6 @@
           }
         }
       }
-
-      //STYLE and Move images
-
-      const pokemonCard = [];
 
       function createPokemonCard(pokemon) {
         //Henter pokemon sin nummer-id, for å knytte opp mot ekstern bildedatabase
@@ -445,17 +464,20 @@
       skillsList.style.gridTemplateColumns = "auto auto";
       skillsList.style.listStyleType = "none";
 
+      //Arrau til å lagre Pokémonens "move" eller ferdighet
       showSkills = [];
-      //skills heter "MOVE" i PokeAPI
 
+      //iterer gjennom Arrayet for å legge til click-event på hvert element (teksten som representerer hver move)
       showSkills.forEach((skill) => {
         skill.addEventListener("click", function () {
+          //Alert som popper opp når moven blir trykket på
           alert(
             `${myPokemonId} har angrepet med ${skill}. ${enemyId} har nå ${enemyData}HP igjen!`
           );
         });
       });
 
+      //Funksjon som lagrer Pokémon og Pokémondata i SESSION-storage. Ny info blir lagret (gammelt blir slettet) hver gange en oppdaterer siden
       async function saveEnemyMoves() {
         try {
           const randomPokemon = await fetchRandomPokemon();
@@ -476,11 +498,13 @@
         }
       }
 
+      //Henter HP fra stats og sender det til pokemonData (gjør det tilgjengelig for bruk der)
       function getHP(pokemonData) {
         return pokemonData.stats.find((stat) => stat.stat.name === "hp")
           .base_stat;
       }
 
+      //Henter inn spesifikk data og lagrer til vider bruk.
       async function addDataToArrays() {
         try {
           const { enemyHP, myPokemonHP } = await addPokemonNameData();
@@ -513,9 +537,10 @@
         }
       }
 
-      //Aktiverer angrep med "knapp"
+      //konstaterer hvilke element som skal gjøres om til et klikkbart element
       const moveBtn = document.querySelectorAll(".skill");
 
+      //Bestemmer hvordan skade skal håndteres
       function generateRandomDamage(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
       }
@@ -525,11 +550,14 @@
           // kode som lager angrep - hente stats
 
           const selectedSkill = skill.textContent;
+          //konstaterer at skade skal være fra 5-20HP
           const damage = generateRandomDamage(5, 20);
           const enemyImg = document.querySelector(".img-container.enemy img");
 
+          //Skaden skal brukes i myPokemonAttack
           myPokemonAttack();
 
+          //Bestemmer hva som skal skje dersom en IKKE Trykker på chery
           if (selectedSkill !== "skill 4") {
             enemy.currentHP -= damage;
 
@@ -539,39 +567,48 @@
             document.querySelector(
               "#enemy-health-txt"
             ).textContent = `HP: ${enemy.currentHP}`;
+            //Hvis cherry blir trykket skal useCherryfunksjon kalles opå
           } else {
             useCherry();
           }
 
+          //Motangrep skjer etter at myPokemon har angrepet
           counterAttack();
 
+          //Alerts for game over. Her kunne spillet blitt deaktivert med egen funksjon, dersom en av de er !.alive
+          //Hvis min Pokémon beseirer fienden, skal alert "Gratulerer.." komme opp
           if (!enemy.alive && myPokemon.alive) {
             alert("Gratulerer, du har vunnet!");
 
-            if (enemy.alivev && !myPokemon.alive) {
+            //Hvis fienden lever og myPokemon ikke lever = alerte "du er blitt beseiret!"
+            if (enemy.alive && !myPokemon.alive) {
               alert("Du er blitt beseiret!");
             }
-          }
+          } //sjekker om noen er i live, dersom en eller begge er død skal "GAME OVER" komme
           if (!enemy.alive || !myPokemon.alive) {
             alert("GAME OVER");
           }
         });
 
+        //Sier hvor mye boost cherry skal gi
         function useCherry() {
           const boostHP = 10;
           myPokemon.currentHP += boostHP;
 
+          //oppdaterer HP når cherry har boostet HP
           document.querySelector(
             "#my-pokemon-health-txt"
           ).textContent = `HP: ${myPokemon.currentHP}`;
         }
 
+        //Lager "cheri" til et klikkbart ord
         const cherrySkill = document.querySelectorAll("#skills-list .skill")[3];
         cherrySkill.addEventListener("click", function () {
           useCherry();
         });
       });
 
+      //Definerer hvor endring skal skje når min Pokémon angriper
       async function myPokemonAttack() {
         try {
           const myPokemonImage = document.querySelector(
@@ -582,8 +619,10 @@
         }
       }
 
+      //Definerer hva som skal skje når fienden angriper
       async function counterAttack() {
         try {
+          //Hvis fienden er beseiret skal bildet forsvinne og alert oppstå
           if (enemy.currentHP <= 0) {
             enemy.alive = false;
             alert("Fiendens Pokémon har ingen HP igjen!");
