@@ -115,6 +115,7 @@
       let myPokemonsArray = [];
       let enemy;
       const pokemonCard = [];
+      console.log(myPokemonsArray);
 
       //Fetcher tilfeldige pokemon fra PokeAPI.co
       //for-loop henter 3 pokemons, math.floor henter tilfeldige pokemons fra 0-250.plass i APIet.
@@ -583,9 +584,6 @@
               alert("Du er blitt beseiret!");
             }
           } //sjekker om noen er i live, dersom en eller begge er død skal "GAME OVER" komme
-          if (!enemy.alive || !myPokemon.alive) {
-            alert("GAME OVER");
-          }
         });
 
         //Sier hvor mye boost cherry skal gi
